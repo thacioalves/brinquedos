@@ -3,7 +3,7 @@ package br.unitins.resource;
 import java.util.List;
 
 import javax.inject.Inject;
-
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -35,7 +35,7 @@ public class BrinquedoResource {
     }
 
     @POST
-    public Response insert(BrinquedoDTO brinquedodto) {
+    public Response insert(@Valid BrinquedoDTO brinquedodto) {
 
         BrinquedoResponseDTO brinquedo = brinquedoService.create(brinquedodto);
         return Response
@@ -46,18 +46,19 @@ public class BrinquedoResource {
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, BrinquedoDTO brinquedodto) {
+    public Response update(@Valid @PathParam("id") Long id, BrinquedoDTO brinquedodto) {
 
         BrinquedoResponseDTO brinquedo = brinquedoService.update(id, brinquedodto);
         return Response
-                .ok(brinquedo)
+                .status(Status.NO_CONTENT)
+                .entity(brinquedo)
                 .build();
 
     }
 
     @DELETE
     @Path("/{id}")
-    public Response delete(@PathParam("id") Long id) {
+    public Response delete(@Valid @PathParam("id") Long id) {
         brinquedoService.delete(id);
         return Response
                 .status(Status.NO_CONTENT)

@@ -3,7 +3,7 @@ package br.unitins.resource;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
+
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,9 +14,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
-import br.unitins.model.Loja;
-import br.unitins.repository.LojaRepository;
+import br.unitins.dto.LojaDTO;
+import br.unitins.dto.LojaResponseDTO;
+import br.unitins.service.LojaService;
 
 @Path("/lojas")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -24,64 +27,55 @@ import br.unitins.repository.LojaRepository;
 public class LojaResource {
 
     @Inject
-    private LojaRepository lojarepository;
-
-    @GET
-    public List<Loja> getAll() {
-
-        return lojarepository.findAll().list();
-
-    }
+    private LojaService lojaService;
 
     @POST
-    @Transactional
-    public Loja insert (Loja loja) {
+    public Response insert(@Valid LojaDTO lojadto) {
 
-        lojarepository.persist(loja);
-
-        return loja;
+        LojaResponseDTO brinquedo = lojaService.create(lojadto);
+        return Response
+                .status(Status.CREATED)
+                .entity(brinquedo)
+                .build();
     }
 
     @PUT
     @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Loja update(@PathParam("id") Long id, Loja loja) {
+    public Response update(@Valid @PathParam("id") Long id, LojaDTO lojadto) {
 
-        Loja entity = lojarepository.findById(id);
+        LojaResponseDTO brinquedo = lojaService.update(id, lojadto);
+        return Response
+                .status(Status.NO_CONTENT)
+                .entity(brinquedo)
+                .build();
 
-        entity.setNome(loja.getNome());
-        entity.setEstado(loja.getEstado());
-        entity.setCidade(loja.getCidade());
-        entity.setEndereco(loja.getEndereco());
-
-        return entity;
     }
 
     @DELETE
     @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Loja delete(@PathParam("id") Long id) {
-
-        Loja entity = lojarepository.findById(id);
-
-        lojarepository.delete(entity);
-
-        return entity;
+    public Response delete(@Valid @PathParam("id") Long id) {
+        lojaService.delete(id);
+        return Response
+                .status(Status.NO_CONTENT)
+                .build();
     }
 
     @GET
     @Path("/search/{id}")
-    public Loja searchId(@PathParam("id") Long id) {
-        return lojarepository.findById(id);
+    public LojaResponseDTO searchId(@PathParam("id") Long id) {
+        return lojaService.findById(id);
     }
 
     @GET
     @Path("/search/{nome}")
-    public List<Loja> search(@PathParam("nome") String nome) {
-        return lojarepository.findByNome(nome);
+    public List<LojaResponseDTO> search(@PathParam("nome") String nome) {
+        return lojaService.findByNome(nome);
     }
+
+    @GET
+    @Path("/count")
+    public long count() {
+        return lojaService.count();
+    }
+
 }

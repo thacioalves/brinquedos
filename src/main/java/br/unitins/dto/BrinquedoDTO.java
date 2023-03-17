@@ -1,6 +1,7 @@
 package br.unitins.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class BrinquedoDTO {
@@ -8,10 +9,10 @@ public class BrinquedoDTO {
     @NotBlank(message = "O campo nome deve ser informado.")
     private String nome;
 
-    @NotBlank(message = "O campo nome deve ser informado.")
+    @NotNull(message = "O campo marca não pode ser nulo.")
     private String marca;
 
-    @NotNull(message = "O campo idLoja deve ser informado.")
+    @NotEmpty(message = "O campo idLoja não pode estar vazio.")
     private Long idLoja;
 
     public String getMarca() {
