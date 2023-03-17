@@ -1,5 +1,6 @@
 package br.unitins.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +14,8 @@ public class Brinquedo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(nullable = false, length = 60)
     private String nome;
     private String marca;
 

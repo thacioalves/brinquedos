@@ -1,10 +1,9 @@
 package br.unitins.resource;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -14,12 +13,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import br.unitins.dto.BrinquedoDTO;
 import br.unitins.dto.BrinquedoResponseDTO;
-import br.unitins.model.Brinquedo;
-import br.unitins.repository.BrinquedoRepository;
-import br.unitins.repository.LojaRepository;
+import br.unitins.service.BrinquedoService;
 
 @Path("/brinquedos")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -27,76 +26,60 @@ import br.unitins.repository.LojaRepository;
 public class BrinquedoResource {
 
     @Inject
-    private BrinquedoRepository brinquedorepository;
-
-    @Inject
-    private LojaRepository lojaRepository;
+    private BrinquedoService brinquedoService;
 
     @GET
     public List<BrinquedoResponseDTO> getAll() {
-
-        return brinquedorepository.findAll()
-                .stream()
-                .map(brinquedo -> new BrinquedoResponseDTO(brinquedo))
-                .collect(Collectors.toList());
+        return brinquedoService.getAll();
 
     }
 
     @POST
-    @Transactional
-    public BrinquedoResponseDTO insert(BrinquedoDTO brinquedodto) {
+    public Response insert(BrinquedoDTO brinquedodto) {
 
-        Brinquedo entity = new Brinquedo();
-        entity.setNome(brinquedodto.getNome());
-        entity.setMarca(brinquedodto.getMarca());
-        entity.setLoja(lojaRepository.findById(brinquedodto.getIdLoja()));
-
-        brinquedorepository.persist(entity);
-
-        return new BrinquedoResponseDTO(entity);
+        BrinquedoResponseDTO brinquedo = brinquedoService.create(brinquedodto);
+        return Response
+                .status(Status.CREATED)
+                .entity(brinquedo)
+                .build();
     }
 
     @PUT
     @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Brinquedo update(@PathParam("id") Long id, Brinquedo brinquedo) {
+    public Response update(@PathParam("id") Long id, BrinquedoDTO brinquedodto) {
 
-        Brinquedo entity = brinquedorepository.findById(id);
+        BrinquedoResponseDTO brinquedo = brinquedoService.update(id, brinquedodto);
+        return Response
+                .ok(brinquedo)
+                .build();
 
-        entity.setNome(brinquedo.getNome());
-        entity.setMarca(brinquedo.getMarca());
-        entity.setLoja(brinquedo.getLoja());
-        entity.setIdade(brinquedo.getIdade());
-
-        return entity;
     }
 
     @DELETE
     @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Brinquedo delete(@PathParam("id") Long id) {
-
-        Brinquedo entity = brinquedorepository.findById(id);
-
-        brinquedorepository.delete(entity);
-
-        return entity;
+    public Response delete(@PathParam("id") Long id) {
+        brinquedoService.delete(id);
+        return Response
+                .status(Status.NO_CONTENT)
+                .build();
     }
 
     @GET
     @Path("/search/{id}")
-    public Brinquedo searchId(@PathParam("id") Long id) {
-        return brinquedorepository.findById(id);
+    public BrinquedoResponseDTO searchId(@PathParam("id") Long id) {
+        return brinquedoService.findById(id);
     }
 
     @GET
     @Path("/search/{nome}")
-    public List <Brinquedo> search(@PathParam("nome") String nome) {
-        return brinquedorepository.findByNome(nome);
+    public List<BrinquedoResponseDTO> search(@PathParam("nome") String nome) {
+        return brinquedoService.findByNome(nome);
+    }
+
+    @GET
+    @Path("/count")
+    public long count() {
+        return brinquedoService.count();
     }
 
 }
