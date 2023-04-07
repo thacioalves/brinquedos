@@ -1,19 +1,22 @@
 package br.unitins.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 public class LojaDTO {
 
     @NotBlank(message = "O campo nome deve ser informado.")
     private String nome;
 
-    @NotNull(message = "O campo cidade não pode ser nulo.")
-    private String cidade;
+    @NotBlank(message = "O campo cnpj deve ser informado.")
+    private String cnpj;
 
-    @NotEmpty(message = "O campo estado não pode estar vazio.")
-    private String estado;
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
+    }
 
     public String getNome() {
         return nome;
@@ -21,22 +24,6 @@ public class LojaDTO {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 
 }

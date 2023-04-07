@@ -57,9 +57,6 @@ public class LojaServiceImpl implements LojaService {
 
         Loja entity = new Loja();
         entity.setNome(lojadto.getNome());
-        entity.setCidade(lojadto.getCidade());
-        entity.setEstado(lojadto.getEstado());
-
         lojaRepository.persist(entity);
 
         return new LojaResponseDTO(entity);
@@ -71,8 +68,6 @@ public class LojaServiceImpl implements LojaService {
         Loja entity = lojaRepository.findById(id);
 
         entity.setNome(lojadto.getNome());
-        entity.setCidade(lojadto.getCidade());
-        entity.setEstado(lojadto.getEstado());
 
         return new LojaResponseDTO(entity);
     }

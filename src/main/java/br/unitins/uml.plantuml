@@ -1,0 +1,62 @@
+@startuml
+
+class Compra{
+    - id: Long
+    - totalCompra: Double
+}
+
+class ItemCompra{
+    - id: Long
+    - quantidade: Integer
+    - preco: Double
+}
+
+enum Pagamento{
+    pix: Int
+    credito: Int
+    debito: Int
+}
+
+class Usuario{
+    - id: Long
+    - nome: String
+    - email: String
+    - senha: String
+    - cpf: String
+}
+
+class Brinquedo{
+    - id: Long
+    - nome: String
+    - marca: String
+    - idade: String
+}
+
+class Loja{
+    - id: Long
+    - nome: String
+    - cnpj: String
+}
+
+class Endereco{
+    - id: Long
+    - principal: Boolean
+    - logradouro: String
+    - bairro: String
+    - numero: String
+    - complemento: String
+    - cep: String
+    - cidade: String
+    - estado: String
+}
+
+ItemCompra "*" <--* "1" Compra
+ItemCompra "*" --> "1" Brinquedo
+Usuario "*" --> "*" Brinquedo
+Compra "*" --> "1" Endereco
+Loja "1" --> "*" Brinquedo
+Endereco "*" <--* "1" Usuario
+Pagamento "1" <--* "1" Compra
+
+
+@enduml

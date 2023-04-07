@@ -2,18 +2,11 @@ package br.unitins.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Brinquedo {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Brinquedo extends DefaultEntity{
 
     @Column(nullable = false, length = 60)
     private String nome;
@@ -24,14 +17,6 @@ public class Brinquedo {
     private Loja loja;
     
     private int idade;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long loja) {
-        this.id = loja;
-    }
 
     public String getNome() {
         return nome;

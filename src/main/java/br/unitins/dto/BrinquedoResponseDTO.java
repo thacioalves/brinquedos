@@ -6,29 +6,28 @@ import java.util.Map;
 import br.unitins.model.Brinquedo;
 
 public class BrinquedoResponseDTO {
-    private Long id;
     private String nome;
+    private String marca;
     private Map<String, Object> loja;
 
     public BrinquedoResponseDTO(Brinquedo brinquedo) {
-        this.id = brinquedo.getId();
         this.nome = brinquedo.getNome();
+        this.marca = brinquedo.getMarca();
         this.loja = new HashMap<String, Object>();
-        this.loja.put("nome", brinquedo.getNome());
-        this.loja.put("estado", brinquedo.getLoja().getEstado());
-        this.loja.put("cidade", brinquedo.getLoja().getCidade());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.loja.put("nome", brinquedo.getLoja().getNome());
+        this.loja.put("cnpj", brinquedo.getLoja().getCnpj());
     }
 
     public String getNome() {
         return nome;
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
     }
 
     public void setNome(String nome) {
