@@ -17,59 +17,57 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import br.unitins.application.Result;
-import br.unitins.dto.brinquedo.BrinquedoDTO;
-import br.unitins.dto.brinquedo.BrinquedoResponseDTO;
-import br.unitins.service.brinquedo.BrinquedoService;
+import br.unitins.dto.telefone.TelefoneDTO;
+import br.unitins.dto.telefone.TelefoneResponseDTO;
+import br.unitins.service.telefone.TelefoneService;
 
-@Path("/brinquedos")
+@Path("/telefones")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class BrinquedoResource {
+public class TelefoneResource {
 
     @Inject
-    private BrinquedoService brinquedoService;
+    TelefoneService telefoneservice;
 
     @GET
-    public List<BrinquedoResponseDTO> getAll() {
-        return brinquedoService.getAll();
+    public List<TelefoneResponseDTO> getAll() {
+        return telefoneservice.getAll();
 
     }
 
     @GET
     @Path("/{id}")
-    public BrinquedoResponseDTO findById(@PathParam("id") long id) {
-        return brinquedoService.findById(id);
+    public TelefoneResponseDTO findById(@PathParam("id") Long id) {
+        return telefoneservice.findById(id);
     }
 
     @POST
-    public Response insert(BrinquedoDTO brinquedodto) {
+    public Response insert(TelefoneDTO telefonedto) {
         try {
-            BrinquedoResponseDTO brinquedo = brinquedoService.create(brinquedodto);
-            return Response.status(Status.CREATED).entity(brinquedo).build();
+            TelefoneResponseDTO telefone = telefoneservice.create(telefonedto);
+            return Response.status(Status.CREATED).entity(telefone).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
             return Response.status(Status.NOT_FOUND).entity(result).build();
         }
-
     }
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, BrinquedoDTO brinquedodto) {
+    public Response update(@PathParam("id") Long id, TelefoneDTO telefonedto) {
         try {
-            BrinquedoResponseDTO brinquedo = brinquedoService.create(brinquedodto);
-            return Response.status(Status.CREATED).entity(brinquedo).build();
+            TelefoneResponseDTO telefone = telefoneservice.create(telefonedto);
+            return Response.status(Status.CREATED).entity(telefone).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
             return Response.status(Status.NOT_FOUND).entity(result).build();
         }
-
     }
 
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
-        brinquedoService.delete(id);
+        telefoneservice.delete(id);
         return Response
                 .status(Status.NO_CONTENT)
                 .build();
@@ -77,20 +75,20 @@ public class BrinquedoResource {
 
     @GET
     @Path("/search/{id}")
-    public BrinquedoResponseDTO searchId(@PathParam("id") Long id) {
-        return brinquedoService.findById(id);
+    public TelefoneResponseDTO searchId(@PathParam("id") Long id) {
+        return telefoneservice.findById(id);
     }
 
     @GET
     @Path("/search/{nome}")
-    public List<BrinquedoResponseDTO> search(@PathParam("nome") String nome) {
-        return brinquedoService.findByNome(nome);
+    public List<TelefoneResponseDTO> search(@PathParam("nome") String nome) {
+        return telefoneservice.findByNumero(nome);
     }
 
     @GET
     @Path("/count")
     public long count() {
-        return brinquedoService.count();
+        return telefoneservice.count();
     }
 
 }

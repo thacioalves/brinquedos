@@ -11,10 +11,27 @@ class ItemCompra{
     - preco: Double
 }
 
-enum Pagamento{
-    pix: Int
-    credito: Int
-    debito: Int
+class Pagamento{
+    - id: Long
+    - valor: String
+}
+
+class Boleto{
+    - id: Long
+    - dataVencimento: Date
+    - dataPagamento: Date
+}
+
+class Cartao{
+    - id: Long
+    - nomeTitular: String
+    - numeroCartao: String
+    - dataValidade: String
+}
+
+class Pix{
+    - id: long
+    - chavePix: String
 }
 
 class Usuario{
@@ -25,11 +42,29 @@ class Usuario{
     - cpf: String
 }
 
+class Telefone{
+    - id: Long
+    - codigoArea: String
+    - numero: String
+}
+
+enum Sexo{
+    - MASCULINO: int
+    - FEMININO: int
+}
+
 class Brinquedo{
     - id: Long
-    - nome: String
     - marca: String
     - idade: String
+}
+
+class Produto{
+    - id: Long
+    - nome: String
+    - descricao: String
+    - preco: Double
+    - estoque: Integer
 }
 
 class Loja{
@@ -46,17 +81,41 @@ class Endereco{
     - numero: String
     - complemento: String
     - cep: String
-    - cidade: String
-    - estado: String
 }
 
-ItemCompra "*" <--* "1" Compra
-ItemCompra "*" --> "1" Brinquedo
-Usuario "*" --> "*" Brinquedo
-Compra "*" --> "1" Endereco
-Loja "1" --> "*" Brinquedo
-Endereco "*" <--* "1" Usuario
-Pagamento "1" <--* "1" Compra
+class Estado{
+    - id: Long
+    - nome: String
+    - sigla: String
+}
 
+class Cidade{
+    - id: Long
+    - nome: String
+}
+
+Usuario "*" --> "1" Produto : listaDesejo
+Usuario "1" *--> "*" Endereco
+Usuario "1" *--> "1" Telefone
+Usuario "*" --> "1" Loja
+Usuario "1" --> "1" Pagamento
+Usuario "1" *--> "1" Sexo
+
+Compra "*" --> "1" Endereco
+Compra "1" *--> "1" Pagamento
+Compra "1" *--> "*" ItemCompra
+
+ItemCompra "*" --> "1" Brinquedo
+
+Cidade "*" --> "1" Estado
+
+Loja "1" --> "*" Produto
+
+Endereco "*" --> "1" Cidade
+
+Brinquedo --|> Produto
+Pix --|> Pagamento
+Cartao --|> Pagamento
+Boleto --|> Pagamento
 
 @enduml

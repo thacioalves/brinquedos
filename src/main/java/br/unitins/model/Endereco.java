@@ -1,22 +1,43 @@
 package br.unitins.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
-public class Endereco extends DefaultEntity {
-    private Boolean principal;
+public class Endereco {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String logradouro;
     private String bairro;
     private String numero;
     private String complemento;
     private String cep;
 
-    public Boolean getPrincipal() {
-        return principal;
+    @ManyToOne
+    @JoinColumn(name = "id_cidade")
+    private Cidade cidade;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setPrincipal(Boolean principal) {
-        this.principal = principal;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Cidade getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(Cidade cidade) {
+        this.cidade = cidade;
     }
 
     public String getLogradouro() {

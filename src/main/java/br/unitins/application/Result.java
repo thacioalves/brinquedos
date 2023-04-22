@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 
 public class Result {
-    
+
     private String message;
     private boolean success;
 
@@ -15,7 +15,7 @@ public class Result {
         this.message = message;
     }
 
-    Result(Set<? extends ConstraintViolation<?>> violations) {
+    public Result(Set<? extends ConstraintViolation<?>> violations) {
         this.success = false;
         this.message = violations.stream()
                 .map(cv -> cv.getMessage())
