@@ -47,7 +47,7 @@ public class EnderecoServiceImpl implements EnderecoService {
         validar(enderecodto);
 
         Endereco entity = new Endereco();
-        entity.setLogradouro(enderecodto.logradouro());
+        entity.setRua(enderecodto.rua());
         entity.setBairro(enderecodto.bairro());
         entity.setNumero(enderecodto.numero());
         entity.setComplemento(enderecodto.complemento());
@@ -71,10 +71,10 @@ public class EnderecoServiceImpl implements EnderecoService {
     public EnderecoResponseDTO update(Long id, EnderecoDTO enderecodto) throws ConstraintViolationException {
         Endereco enderecoUpdate = enderecorepository.findById(id);
         if (enderecoUpdate == null)
-            throw new NotFoundException("Endereco não encontrada.");
+            throw new NotFoundException("Endereco não encontrado.");
         validar(enderecodto);
 
-        enderecoUpdate.setLogradouro(enderecodto.logradouro());
+        enderecoUpdate.setRua(enderecodto.rua());
         enderecoUpdate.setBairro(enderecodto.bairro());
         enderecoUpdate.setNumero(enderecodto.numero());
         enderecoUpdate.setComplemento(enderecodto.complemento());

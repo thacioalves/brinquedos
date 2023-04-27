@@ -9,7 +9,7 @@ import br.unitins.model.Endereco;
 public record EnderecoResponseDTO(
 
         Long id,
-        String logradouro,
+        String rua,
         String bairro,
 
         @Size(max = 2, message = "O numero deve posssuir 14 caracteres.")
@@ -24,7 +24,7 @@ public record EnderecoResponseDTO(
 
 ) {
     public EnderecoResponseDTO(Endereco endereco){
-        this(endereco.getId(), endereco.getLogradouro(), endereco.getBairro(), endereco.getNumero(),
+        this(endereco.getId(), endereco.getRua(), endereco.getBairro(), endereco.getNumero(),
         endereco.getComplemento(), endereco.getCep(), endereco.getCidade()
         );
     }

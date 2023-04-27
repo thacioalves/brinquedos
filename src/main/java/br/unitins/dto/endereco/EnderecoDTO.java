@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 
 public record EnderecoDTO(
     
-        String logradouro,
+        String rua,
         String bairro,
 
         @Size(max = 2, message = "O numero deve posssuir 2 caracteres.")

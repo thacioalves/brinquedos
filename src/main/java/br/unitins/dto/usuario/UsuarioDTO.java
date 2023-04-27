@@ -18,7 +18,6 @@ public record UsuarioDTO(
         String senha,
         Integer sexo,
 
-        List<Long> idLoja,
         List<Long> idTelefone,
         List<Long> idEndereco,
         List<Long> idProduto

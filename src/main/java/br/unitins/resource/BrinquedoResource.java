@@ -1,7 +1,5 @@
 package br.unitins.resource;
 
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Consumes;
@@ -21,13 +19,15 @@ import br.unitins.dto.brinquedo.BrinquedoDTO;
 import br.unitins.dto.brinquedo.BrinquedoResponseDTO;
 import br.unitins.service.brinquedo.BrinquedoService;
 
+import java.util.List;
+
 @Path("/brinquedos")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class BrinquedoResource {
 
     @Inject
-    private BrinquedoService brinquedoService;
+    BrinquedoService brinquedoService;
 
     @GET
     public List<BrinquedoResponseDTO> getAll() {
