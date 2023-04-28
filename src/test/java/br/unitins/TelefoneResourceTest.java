@@ -1,7 +1,5 @@
 package br.unitins;
 
-import br.unitins.dto.endereco.EnderecoResponseDTO;
-import br.unitins.dto.produto.ProdutoResponseDTO;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 

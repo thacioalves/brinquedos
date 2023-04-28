@@ -53,10 +53,10 @@ public class ProdutoResource {
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, ProdutoDTO dto) {
+    public Response update(@PathParam("id") Long id, ProdutoDTO produtodto) {
         try {
-            ProdutoResponseDTO produto = produtoservice.update(id, dto);
-            return Response.ok(produto).build();
+            ProdutoResponseDTO produto = produtoservice.create(produtodto);
+            return Response.status(Status.NO_CONTENT).entity(produto).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
             return Response.status(Status.NOT_FOUND).entity(result).build();

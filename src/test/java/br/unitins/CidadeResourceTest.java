@@ -1,6 +1,5 @@
 package br.unitins;
 
-import br.unitins.dto.brinquedo.BrinquedoResponseDTO;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 
@@ -8,7 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import br.unitins.dto.cidade.CidadeDTO;
 import br.unitins.dto.cidade.CidadeResponseDTO;
+import br.unitins.dto.estado.EstadoDTO;
 import br.unitins.service.cidade.CidadeService;
+import br.unitins.service.estado.EstadoService;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
@@ -24,6 +25,9 @@ public class CidadeResourceTest {
     @Inject
     CidadeService cidadeservice;
 
+    @Inject
+    EstadoService estadoservice;
+
     @Test
     public void testGetAll() {
         given()
@@ -34,29 +38,36 @@ public class CidadeResourceTest {
 
     @Test
     public void testInsert() {
-        CidadeDTO cidade = new CidadeDTO(
-                "Palmas", (long) 1);
 
-        CidadeResponseDTO cidadecreate = cidadeservice.create(cidade);
+        EstadoDTO estado = new EstadoDTO(
+            "Tocantins", "TO"
+        );
+
+        Long id = estadoservice.create(estado).id();
+
+        CidadeDTO cidade = new CidadeDTO(
+                "Palmas", id);
+
+    
         given()
                 .contentType(ContentType.JSON)
-                .body(cidadecreate)
+                .body(cidade)
                 .when().post("/cidades")
                 .then()
                 .statusCode(201)
-                .body("id", notNullValue(), "nome", is("Palmas"), "idEstado", is(1));
+                .body("id", notNullValue(), "nome", is("Palmas"), "idEstado", is(id));
     }
 
     @Test
     public void testUpdate() {
         // Adicionando uma cidade no banco de dados
         CidadeDTO cidade = new CidadeDTO(
-                "Palmas", (long) 1);
+                "Palmas", 1L);
         Long id = cidadeservice.create(cidade).id();
 
         // Criando outra cidade para atuailzacao
         CidadeDTO cidadeupdate = new CidadeDTO(
-                "Sao Paulo", (long) 2);
+                "Sao Paulo", 2L);
 
         CidadeResponseDTO cidadeatualizado = cidadeservice.update(id, cidadeupdate);
 
@@ -77,7 +88,7 @@ public class CidadeResourceTest {
     public void testDelete() {
         // Adicionando uma cidade no banco de dados
         CidadeDTO cidade = new CidadeDTO(
-                "Palmas", (long) 1);
+                "Palmas", 1L);
         Long id = cidadeservice.create(cidade).id();
         given()
                 .when().delete("/cidades/" + id)

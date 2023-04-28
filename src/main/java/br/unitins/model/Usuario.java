@@ -27,10 +27,6 @@ public class Usuario {
     private List<Endereco> endereco;
 
     @OneToMany
-    @JoinColumn(name = "id_produto")
-    private List<Produto> produto;
-
-    @OneToMany
     @JoinColumn(name = "id_telefone")
     private List<Telefone> telefone;
 
@@ -88,14 +84,6 @@ public class Usuario {
 
     public void setEndereco(List<Endereco> endereco) {
         this.endereco = endereco;
-    }
-
-    public List<Produto> getProduto() {
-        return produto;
-    }
-
-    public void setProduto(List<Produto> produto) {
-        this.produto = produto;
     }
 
     public List<Telefone> getTelefone() {

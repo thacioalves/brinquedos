@@ -57,7 +57,7 @@ public class TelefoneResource {
     public Response update(@PathParam("id") Long id, TelefoneDTO telefonedto) {
         try {
             TelefoneResponseDTO telefone = telefoneservice.create(telefonedto);
-            return Response.status(Status.CREATED).entity(telefone).build();
+            return Response.status(Status.NO_CONTENT).entity(telefone).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
             return Response.status(Status.NOT_FOUND).entity(result).build();

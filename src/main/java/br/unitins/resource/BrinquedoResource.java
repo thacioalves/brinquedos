@@ -58,7 +58,7 @@ public class BrinquedoResource {
     public Response update(@PathParam("id") Long id, BrinquedoDTO brinquedodto) {
         try {
             BrinquedoResponseDTO brinquedo = brinquedoService.create(brinquedodto);
-            return Response.status(Status.CREATED).entity(brinquedo).build();
+            return Response.status(Status.NO_CONTENT).entity(brinquedo).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
             return Response.status(Status.NOT_FOUND).entity(result).build();

@@ -56,8 +56,8 @@ public class EstadoResource {
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, EstadoDTO estadodto) {
         try {
-            EstadoResponseDTO estado = estadoservice.update(id, estadodto);
-            return Response.ok(estado).build();
+            EstadoResponseDTO estado = estadoservice.create(estadodto);
+            return Response.status(Status.NO_CONTENT).entity(estado).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
             return Response.status(Status.NOT_FOUND).entity(result).build();

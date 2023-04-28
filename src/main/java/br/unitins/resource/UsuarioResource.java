@@ -55,8 +55,8 @@ public class UsuarioResource {
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, UsuarioDTO usuariodto) {
         try {
-            UsuarioResponseDTO usuario = usuarioservice.update(id, usuariodto);
-            return Response.ok(usuario).build();
+            UsuarioResponseDTO usuario = usuarioservice.create(usuariodto);
+            return Response.status(Status.NO_CONTENT).entity(usuario).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
             return Response.status(Status.NOT_FOUND).entity(result).build();

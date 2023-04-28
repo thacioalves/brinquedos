@@ -5,6 +5,9 @@ import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import br.unitins.dto.endereco.EnderecoDTO;
+import br.unitins.dto.telefone.TelefoneDTO;
+
 public record UsuarioDTO(
 
         @NotBlank(message = "O campo nome deve ser informado.")
@@ -18,9 +21,8 @@ public record UsuarioDTO(
         String senha,
         Integer sexo,
 
-        List<Long> idTelefone,
-        List<Long> idEndereco,
-        List<Long> idProduto
+        List<TelefoneDTO> telefone,
+        List<EnderecoDTO> endereco
 
 ) {
 

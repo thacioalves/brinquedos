@@ -7,6 +7,8 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import br.unitins.dto.endereco.EnderecoDTO;
+import br.unitins.dto.telefone.TelefoneDTO;
 import br.unitins.model.Endereco;
 import br.unitins.model.Produto;
 import br.unitins.model.Sexo;
@@ -30,12 +32,12 @@ public record UsuarioResponseDTO(
         Sexo sexo,
         
         List<Telefone> telefone,
-        List<Endereco> endereco,
-        List<Produto> produto
+        List<Endereco> endereco
+       
 ) {
     public UsuarioResponseDTO(Usuario usuario){
         this(usuario.getId(), usuario.getNome(), usuario.getCpf(), usuario.getEmail(),
-        usuario.getSenha(), usuario.getSexo(), usuario.getTelefone(), usuario.getEndereco(), usuario.getProduto()
+        usuario.getSenha(), usuario.getSexo(), usuario.getTelefone(), usuario.getEndereco()
         );
     }
 }
