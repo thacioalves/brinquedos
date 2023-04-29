@@ -4,7 +4,6 @@ import javax.validation.constraints.NotBlank;
 
 import br.unitins.dto.estado.EstadoResponseDTO;
 import br.unitins.model.Cidade;
-import br.unitins.model.Estado;
 
 public record CidadeResponseDTO(
 
@@ -17,6 +16,6 @@ public record CidadeResponseDTO(
 
 ){
     public CidadeResponseDTO(Cidade cidade) {
-        this(cidade.getId(), cidade.getNome(),);
+        this(cidade.getId(), cidade.getNome(), new EstadoResponseDTO(cidade.getEstado()));
     }
 }

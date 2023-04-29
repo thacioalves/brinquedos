@@ -55,7 +55,7 @@ public class CidadeResource {
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, CidadeDTO cidadedto) {
         try {
-            CidadeResponseDTO cidade = cidadeservice.create(cidadedto);
+            CidadeResponseDTO cidade = cidadeservice.update(id, cidadedto);
             return Response.status(Status.NO_CONTENT).entity(cidade).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());

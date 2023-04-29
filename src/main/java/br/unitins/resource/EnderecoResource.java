@@ -54,7 +54,7 @@ public class EnderecoResource {
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, EnderecoDTO enderecodto) {
         try {
-            EnderecoResponseDTO endereco = enderecoservice.create(enderecodto);
+            EnderecoResponseDTO endereco = enderecoservice.update(id, enderecodto);
             return Response.status(Status.NO_CONTENT).entity(endereco).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());

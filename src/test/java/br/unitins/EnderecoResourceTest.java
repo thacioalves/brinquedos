@@ -5,9 +5,14 @@ import io.restassured.http.ContentType;
 
 import org.junit.jupiter.api.Test;
 
+import br.unitins.dto.cidade.CidadeDTO;
 import br.unitins.dto.endereco.EnderecoDTO;
 import br.unitins.dto.endereco.EnderecoResponseDTO;
+import br.unitins.dto.estado.EstadoDTO;
+import br.unitins.model.Cidade;
+import br.unitins.service.cidade.CidadeService;
 import br.unitins.service.endereco.EnderecoService;
+import br.unitins.service.estado.EstadoService;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
@@ -23,6 +28,12 @@ public class EnderecoResourceTest {
         @Inject
         EnderecoService enderecoservice;
 
+        @Inject
+        CidadeService cidadeservice;
+
+        @Inject
+        EstadoService estadoservice;
+
         @Test
         public void testGetAll() {
                 given()
@@ -33,20 +44,21 @@ public class EnderecoResourceTest {
 
         @Test
         public void testInsert() {
-                EnderecoDTO enderecos = new EnderecoDTO(
-                                "604 sul", "Plano Diretor", "alameda A", "QI 17 LT 30", "88888-864", (long) 1);
+                Long id = estadoservice.create(new EstadoDTO("Tocantins", "TO")).id();
 
-                EnderecoResponseDTO enderecocreate = enderecoservice.create(enderecos);
+                Long idCidade = cidadeservice.create(new CidadeDTO("Palmas", id)).id();
+                EnderecoDTO enderecos = new EnderecoDTO(
+                                "604 sul", "Plano Diretor", "alameda A", "QI 17 LT 30", "12345678", idCidade);
+
                 given()
                                 .contentType(ContentType.JSON)
-                                .body(enderecocreate)
+                                .body(enderecos)
                                 .when().post("/enderecos")
                                 .then()
                                 .statusCode(201)
                                 .body("id", notNullValue(), "rua", is("604 sul"), "bairro", is("Plano Diretor"),
                                                 "numero", is("alameda A"), "complemento", is("QI 17 LT 30"), "cep",
-                                                is("88888-864"), "idEstado",
-                                                is(1));
+                                                is("12345678"), "cidade", notNullValue(Cidade.class));
         }
 
         @Test

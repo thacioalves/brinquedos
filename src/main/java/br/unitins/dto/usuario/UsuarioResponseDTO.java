@@ -7,10 +7,7 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import br.unitins.dto.endereco.EnderecoDTO;
-import br.unitins.dto.telefone.TelefoneDTO;
 import br.unitins.model.Endereco;
-import br.unitins.model.Produto;
 import br.unitins.model.Sexo;
 import br.unitins.model.Telefone;
 import br.unitins.model.Usuario;

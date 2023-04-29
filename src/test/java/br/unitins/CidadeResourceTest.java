@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import br.unitins.dto.cidade.CidadeDTO;
 import br.unitins.dto.cidade.CidadeResponseDTO;
 import br.unitins.dto.estado.EstadoDTO;
+import br.unitins.model.Estado;
 import br.unitins.service.cidade.CidadeService;
 import br.unitins.service.estado.EstadoService;
 
@@ -38,60 +39,53 @@ public class CidadeResourceTest {
 
     @Test
     public void testInsert() {
+        Long id = estadoservice.create(new EstadoDTO("Tocantins", "TO")).id();
+        CidadeDTO cidade = new CidadeDTO("Palmas", id);
 
-        EstadoDTO estado = new EstadoDTO(
-            "Tocantins", "TO"
-        );
-
-        Long id = estadoservice.create(estado).id();
-
-        CidadeDTO cidade = new CidadeDTO(
-                "Palmas", id);
-
-    
         given()
                 .contentType(ContentType.JSON)
                 .body(cidade)
                 .when().post("/cidades")
                 .then()
                 .statusCode(201)
-                .body("id", notNullValue(), "nome", is("Palmas"), "idEstado", is(id));
+                .body("id", notNullValue(), 
+                "nome", is("Palmas"), 
+                "estado", notNullValue(Estado.class));
     }
 
     @Test
     public void testUpdate() {
         // Adicionando uma cidade no banco de dados
-        CidadeDTO cidade = new CidadeDTO(
-                "Palmas", 1L);
-        Long id = cidadeservice.create(cidade).id();
+        Long id = estadoservice.create(new EstadoDTO("Tocantins", "TO")).id();
+        CidadeDTO cidade = new CidadeDTO("Palmas", id);
+        Long idCidade = cidadeservice.create(cidade).id();
 
         // Criando outra cidade para atuailzacao
         CidadeDTO cidadeupdate = new CidadeDTO(
-                "Sao Paulo", 2L);
-
-        CidadeResponseDTO cidadeatualizado = cidadeservice.update(id, cidadeupdate);
+                "Paraiso", id);
 
         given()
                 .contentType(ContentType.JSON)
-                .body(cidadeatualizado)
-                .when().put("/cidades/" + id)
+                .body(cidadeupdate)
+                .when().put("/cidades/" + idCidade)
                 .then()
                 .statusCode(204);
 
         // Verificando se os dados foram atualizados no banco de dados
         CidadeResponseDTO cidaderesponse = cidadeservice.findById(id);
-        assertThat(cidaderesponse.nome(), is("Sao Paulo"));
-        assertThat(cidaderesponse.estado(), is(2));
+        assertThat(cidaderesponse.nome(), is("Paraiso"));
+        assertThat(cidaderesponse.estado(), notNullValue());
     }
 
     @Test
     public void testDelete() {
         // Adicionando uma cidade no banco de dados
+        Long id = estadoservice.create(new EstadoDTO("Tocantins", "TO")).id();
         CidadeDTO cidade = new CidadeDTO(
                 "Palmas", 1L);
-        Long id = cidadeservice.create(cidade).id();
+        Long idCidade = cidadeservice.create(cidade).id();
         given()
-                .when().delete("/cidades/" + id)
+                .when().delete("/cidades/" + idCidade)
                 .then()
                 .statusCode(204);
 

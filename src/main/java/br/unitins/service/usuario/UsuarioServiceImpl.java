@@ -19,7 +19,6 @@ import br.unitins.dto.usuario.UsuarioDTO;
 import br.unitins.dto.usuario.UsuarioResponseDTO;
 import br.unitins.model.Cidade;
 import br.unitins.model.Endereco;
-import br.unitins.model.Produto;
 import br.unitins.model.Sexo;
 import br.unitins.model.Telefone;
 import br.unitins.model.Usuario;
