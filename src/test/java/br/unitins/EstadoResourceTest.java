@@ -1,6 +1,5 @@
 package br.unitins;
 
-import br.unitins.dto.endereco.EnderecoResponseDTO;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 
@@ -16,7 +15,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @QuarkusTest
 public class EstadoResourceTest {

@@ -5,18 +5,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
-import javax.ws.rs.NotFoundException;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
+import jakarta.ws.rs.NotFoundException;
 
+import br.unitins.dto.endereco.EnderecoDTO;
+import br.unitins.dto.telefone.TelefoneDTO;
 import br.unitins.dto.usuario.UsuarioDTO;
 import br.unitins.dto.usuario.UsuarioResponseDTO;
+import br.unitins.model.Cidade;
 import br.unitins.model.Endereco;
-import br.unitins.model.Produto;
 import br.unitins.model.Sexo;
 import br.unitins.model.Telefone;
 import br.unitins.model.Usuario;
@@ -65,23 +67,26 @@ public class UsuarioServiceImpl implements UsuarioService {
         entity.setSexo(Sexo.valueOf(usuariodto.sexo()));
 
         entity.setEndereco(new ArrayList<Endereco>());
-        for (Long idEndereco : usuariodto.idEndereco()) {
+        for (EnderecoDTO enderecos : usuariodto.endereco()) {
             Endereco endereco = new Endereco();
-            endereco.setId(idEndereco);
+            endereco.setRua(enderecos.rua());
+            endereco.setBairro(enderecos.bairro());
+            endereco.setNumero(enderecos.numero());
+            endereco.setComplemento(enderecos.complemento());
+            endereco.setCep(enderecos.cep());
+            endereco.setCidade(new Cidade());
+            endereco.getCidade().setId(enderecos.idCidade());
+            ;
+
             entity.getEndereco().add(endereco);
         }
 
-        entity.setProduto(new ArrayList<Produto>());
-        for (Long idProduto : usuariodto.idProduto()) {
-            Produto produto = new Produto();
-            produto.setId(idProduto);
-            entity.getProduto().add(produto);
-        }
-
         entity.setTelefone(new ArrayList<Telefone>());
-        for (Long idTelefone : usuariodto.idTelefone()) {
+        for (TelefoneDTO telefones : usuariodto.telefone()) {
             Telefone telefone = new Telefone();
-            telefone.setId(idTelefone);
+            telefone.setCodigoArea(telefones.codigoArea());
+            telefone.setNumero(telefones.numero());
+
             entity.getTelefone().add(telefone);
         }
 
@@ -103,24 +108,26 @@ public class UsuarioServiceImpl implements UsuarioService {
         entity.setSexo(Sexo.valueOf(usuariodto.sexo()));
 
         entity.setEndereco(new ArrayList<Endereco>());
-        for (Long idEndereco : usuariodto.idEndereco()) {
+        for (EnderecoDTO enderecos : usuariodto.endereco()) {
             Endereco endereco = new Endereco();
-            endereco.setId(idEndereco);
+            endereco.setRua(enderecos.rua());
+            endereco.setBairro(enderecos.bairro());
+            endereco.setNumero(enderecos.numero());
+            endereco.setComplemento(enderecos.complemento());
+            endereco.setCep(enderecos.cep());
+            endereco.setCidade(new Cidade());
+            endereco.getCidade().setId(enderecos.idCidade());
+            ;
+
             entity.getEndereco().add(endereco);
         }
 
-        entity.setProduto(new ArrayList<Produto>());
-        for (Long idProduto : usuariodto.idProduto()) {
-
-            Produto produto = new Produto();
-            produto.setId(idProduto);
-            entity.getProduto().add(produto);
-        }
-
         entity.setTelefone(new ArrayList<Telefone>());
-        for (Long idTelefone : usuariodto.idTelefone()) {
+        for (TelefoneDTO telefones : usuariodto.telefone()) {
             Telefone telefone = new Telefone();
-            telefone.setId(idTelefone);
+            telefone.setCodigoArea(telefones.codigoArea());
+            telefone.setNumero(telefones.numero());
+
             entity.getTelefone().add(telefone);
         }
 

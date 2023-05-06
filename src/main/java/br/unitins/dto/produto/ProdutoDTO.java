@@ -1,6 +1,6 @@
 package br.unitins.dto.produto;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 public record ProdutoDTO(
 

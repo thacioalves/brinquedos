@@ -1,16 +1,15 @@
 package br.unitins;
 
-iimport io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 
 import org.junit.jupiter.api.Test;
 
-import br.unitins.dto.produto.ProdutoDTO;
-import br.unitins.dto.produto.ProdutoResponseDTO;
+import br.unitins.dto.endereco.EnderecoDTO;
+import br.unitins.dto.telefone.TelefoneDTO;
 import br.unitins.dto.usuario.UsuarioDTO;
 import br.unitins.dto.usuario.UsuarioResponseDTO;
-import br.unitins.service.produto.ProdutoService;
+import br.unitins.service.endereco.EnderecoService;
 import br.unitins.service.usuario.UsuarioService;
 
 import static io.restassured.RestAssured.given;
@@ -19,13 +18,19 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.inject.Inject;
 
 @QuarkusTest
 public class UsuarioResourceTest {
 
     @Inject
     UsuarioService usuarioservice;
+
+    @Inject
+    EnderecoService enderecoservice;
 
     @Test
     public void testGetAll() {
@@ -37,7 +42,15 @@ public class UsuarioResourceTest {
 
     @Test
     public void testInsert() {
-        UsuarioDTO usuario = new UsuarioDTO();
+
+        List<TelefoneDTO> telefones = new ArrayList<>();
+        telefones.add(new TelefoneDTO("63", "123456789"));
+
+        List<EnderecoDTO> enderecos = new ArrayList<>();
+        enderecos.add(new EnderecoDTO("603 N", "bairro", "12", "1", "12345678", 1L ));
+
+        UsuarioDTO usuario = new UsuarioDTO(
+            "jose", "123.123.123.12", "jose@gmail.com", "senha", 1, telefones, enderecos);
 
         UsuarioResponseDTO usuariocreate = usuarioservice.create(usuario);
         given()
@@ -46,25 +59,20 @@ public class UsuarioResourceTest {
                 .when().post("/usuarios")
                 .then()
                 .statusCode(201)
-                .body("id", notNullValue(),
-                        "nome", is("boneco"), "preco", is(10.00F),
-                        "idade", is("6"), "marca", is("aleatoria"), "estoque", is(30),
-                        "descricao",
-                        is("boneco de pelucia"));
+                .body("id", notNullValue());
     }
 
     @Test
     public void testUpdate() {
-        // Adicionando um Usuario no banco de dados
-        UsuarioDTO usuario = new UsuarioDTO(
-              );
+        // Adicionando um usuario no banco de dados
+        UsuarioDTO usuario = new UsuarioDTO();
         Long id = usuarioservice.create(usuario).id();
 
-        // Criando outro brinquedo para atuailzacao
-        UsuarioDTO usuarioupdate = new UsuarioDTO(
-               );
+        // Criando outro usuario para atuailzacao
+        UsuarioDTO usuarioupdate = new UsuarioDTO();
 
         UsuarioResponseDTO usuarioatualizado = usuarioservice.update(id, usuarioupdate);
+
         given()
                 .contentType(ContentType.JSON)
                 .body(usuarioatualizado)
@@ -74,26 +82,19 @@ public class UsuarioResourceTest {
 
         // Verificando se os dados foram atualizados no banco de dados
         UsuarioResponseDTO usuarioresponse = usuarioservice.findById(id);
-        assertThat(brinquedoresponse.nome(), is("carrinho"));
-        assertThat(brinquedoresponse.preco(), is(15.00));
-        assertThat(brinquedoresponse.marca(), is("aleatoria"));
-        assertThat(brinquedoresponse.estoque(), is(20));
-        assertThat(brinquedoresponse.descricao(), is("carrinho hot wheels"));
     }
 
     @Test
     public void testDelete() {
-        // Adicionando um brinquedo no banco de dados
-        UsuarioDTO usuario = new UsuarioDTO(
-               );
+        // Adicionando um usuario no banco de dados
+        UsuarioDTO usuario = new UsuarioDTO();
         Long id = usuarioservice.create(usuario).id();
-
         given()
                 .when().delete("/usuarios/" + id)
                 .then()
                 .statusCode(204);
 
-        // verificando se o brinquedo foi excluido
+        // verificando se o usuario foi excluida
         UsuarioResponseDTO usuarioresponse = null;
         try {
             usuarioresponse = usuarioservice.findById(id);

@@ -1,20 +1,17 @@
 package br.unitins.model;
 
 import java.util.List;
+import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 
 @Entity
-public class Usuario {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Usuario extends DefaultEntity{
 
     private String nome;
     private String cpf;
@@ -22,25 +19,18 @@ public class Usuario {
     private String senha;
     private Sexo sexo;
 
+    @ElementCollection
+    @CollectionTable(name ="perfis", joinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "id"))
+    @Column(name = "perfil", length = 30)
+    private Set<Perfil> perfis;
+
     @OneToMany
     @JoinColumn(name = "id_endereco")
     private List<Endereco> endereco;
 
     @OneToMany
-    @JoinColumn(name = "id_produto")
-    private List<Produto> produto;
-
-    @OneToMany
     @JoinColumn(name = "id_telefone")
     private List<Telefone> telefone;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;
@@ -82,20 +72,21 @@ public class Usuario {
         this.sexo = sexo;
     }
 
+    public Set<Perfil> getPerfis() {
+        return perfis;
+    }
+
+    public void setPerfis(Set<Perfil> perfis) {
+        this.perfis = perfis;
+    }
+
+
     public List<Endereco> getEndereco() {
         return endereco;
     }
 
     public void setEndereco(List<Endereco> endereco) {
         this.endereco = endereco;
-    }
-
-    public List<Produto> getProduto() {
-        return produto;
-    }
-
-    public void setProduto(List<Produto> produto) {
-        this.produto = produto;
     }
 
     public List<Telefone> getTelefone() {

@@ -1,9 +1,9 @@
 package br.unitins.dto.cidade;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
+import br.unitins.dto.estado.EstadoResponseDTO;
 import br.unitins.model.Cidade;
-import br.unitins.model.Estado;
 
 public record CidadeResponseDTO(
 
@@ -12,10 +12,10 @@ public record CidadeResponseDTO(
         @NotBlank(message = "O campo nome deve ser informado.")
         String nome,
         
-        Estado estado
+        EstadoResponseDTO estado
 
 ){
     public CidadeResponseDTO(Cidade cidade) {
-        this(cidade.getId(), cidade.getNome(), cidade.getEstado());
+        this(cidade.getId(), cidade.getNome(), new EstadoResponseDTO(cidade.getEstado()));
     }
 }

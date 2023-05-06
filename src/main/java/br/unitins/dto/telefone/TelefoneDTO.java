@@ -1,7 +1,7 @@
 package br.unitins.dto.telefone;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record TelefoneDTO(
 

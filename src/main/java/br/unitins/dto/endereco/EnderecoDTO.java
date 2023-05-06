@@ -1,14 +1,12 @@
 package br.unitins.dto.endereco;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record EnderecoDTO(
     
         String rua,
         String bairro,
-
-        @Size(max = 2, message = "O numero deve posssuir 2 caracteres.")
         String numero,
 
         String complemento,

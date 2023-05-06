@@ -2,13 +2,12 @@ package br.unitins.dto.usuario;
 
 import java.util.List;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import br.unitins.model.Endereco;
-import br.unitins.model.Produto;
 import br.unitins.model.Sexo;
 import br.unitins.model.Telefone;
 import br.unitins.model.Usuario;
@@ -30,12 +29,12 @@ public record UsuarioResponseDTO(
         Sexo sexo,
         
         List<Telefone> telefone,
-        List<Endereco> endereco,
-        List<Produto> produto
+        List<Endereco> endereco
+       
 ) {
     public UsuarioResponseDTO(Usuario usuario){
         this(usuario.getId(), usuario.getNome(), usuario.getCpf(), usuario.getEmail(),
-        usuario.getSenha(), usuario.getSexo(), usuario.getTelefone(), usuario.getEndereco(), usuario.getProduto()
+        usuario.getSenha(), usuario.getSexo(), usuario.getTelefone(), usuario.getEndereco()
         );
     }
 }

@@ -1,18 +1,11 @@
 package br.unitins.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Endereco {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Endereco extends DefaultEntity{
 
     private String rua;
     private String bairro;
@@ -24,20 +17,12 @@ public class Endereco {
     @JoinColumn(name = "id_cidade")
     private Cidade cidade;
 
-    public Long getId() {
-        return id;
-    }
-
     public String getRua() {
         return rua;
     }
 
     public void setRua(String rua) {
         this.rua = rua;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Cidade getCidade() {
