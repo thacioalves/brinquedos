@@ -73,7 +73,7 @@ public class ProdutoResourceTest {
         assertThat(produtoresponse.nome(), is("Batman"));
         assertThat(produtoresponse.descricao(), is("lego batman"));
         assertThat(produtoresponse.preco(), is(30.00));
-        assertThat(produtoresponse.estoque(), is(3));
+        assertThat(produtoresponse.estoque(), is(4));
     }
 
     @Test
