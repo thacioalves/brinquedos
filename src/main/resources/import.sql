@@ -19,4 +19,9 @@
 --(6, 'Rua F', 'Bairro C', '354', 'Complemento C', '12334-432', 2);
 
 
+INSERT INTO usuario(nome, cpf, email, senha) VALUES('Thacio', '12312312312', 'thacio@gmail.com', 'senha')
+
+INSERT INTO perfis (id_usuario, perfis) VALUES(1, 'Admin');
+
+
 
