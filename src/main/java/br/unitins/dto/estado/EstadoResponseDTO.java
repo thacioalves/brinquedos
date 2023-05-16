@@ -1,16 +1,11 @@
 package br.unitins.dto.estado;
 
-import jakarta.validation.constraints.NotBlank;
-
 import br.unitins.model.Estado;
 
 public record EstadoResponseDTO(
 
     Long id,
-    
-    @NotBlank(message = "O campo nome deve ser informado.")
     String nome,
-    
     String sigla
 
 ) {

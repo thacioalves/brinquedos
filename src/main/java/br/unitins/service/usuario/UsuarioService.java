@@ -2,17 +2,21 @@ package br.unitins.service.usuario;
 
 import java.util.List;
 
-import br.unitins.dto.usuario.UsuarioDTO;
 import br.unitins.dto.usuario.UsuarioResponseDTO;
+import br.unitins.model.Usuario;
 
 public interface UsuarioService {
     List<UsuarioResponseDTO> getAll();
 
     UsuarioResponseDTO findById(long id);
 
-    UsuarioResponseDTO create(UsuarioDTO usuariodto);
+    Usuario findByLoginAndSenha(String login, String senha);
 
-    UsuarioResponseDTO update(long id, UsuarioDTO usuariodto);
+    UsuarioResponseDTO findByLogin(String login);
+
+    // UsuarioResponseDTO create(UsuarioDTO usuariodto);
+
+    // UsuarioResponseDTO update(long id, UsuarioDTO usuariodto);
 
     void delete(long id);
 

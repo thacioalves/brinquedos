@@ -1,16 +1,11 @@
 package br.unitins.dto.produto;
 
-import jakarta.validation.constraints.NotBlank;
-
 import br.unitins.model.Produto;
 
 public record ProdutoResponseDTO(
 
         Long id,
-
-        @NotBlank(message = "O campo nome deve ser informado.")
         String nome,
-        
         String descricao,
         Double preco,
         Integer estoque

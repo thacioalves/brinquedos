@@ -40,28 +40,28 @@ public class UsuarioResource {
         return usuarioservice.findById(id);
     }
 
-    @POST
-    public Response insert(UsuarioDTO usuariodto) {
-        try {
-            UsuarioResponseDTO usuario = usuarioservice.create(usuariodto);
-            return Response.status(Status.CREATED).entity(usuario).build();
-        } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
-        }
-    }
+    // @POST
+    // public Response insert(UsuarioDTO usuariodto) {
+    // try {
+    // UsuarioResponseDTO usuario = usuarioservice.create(usuariodto);
+    // return Response.status(Status.CREATED).entity(usuario).build();
+    // } catch (ConstraintViolationException e) {
+    // Result result = new Result(e.getConstraintViolations());
+    // return Response.status(Status.NOT_FOUND).entity(result).build();
+    // }
+    // }
 
-    @PUT
-    @Path("/{id}")
-    public Response update(@PathParam("id") Long id, UsuarioDTO usuariodto) {
-        try {
-            UsuarioResponseDTO usuario = usuarioservice.create(usuariodto);
-            return Response.status(Status.NO_CONTENT).entity(usuario).build();
-        } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
-        }
-    }
+    // @PUT
+    // @Path("/{id}")
+    // public Response update(@PathParam("id") Long id, UsuarioDTO usuariodto) {
+    // try {
+    // UsuarioResponseDTO usuario = usuarioservice.create(usuariodto);
+    // return Response.status(Status.NO_CONTENT).entity(usuario).build();
+    // } catch (ConstraintViolationException e) {
+    // Result result = new Result(e.getConstraintViolations());
+    // return Response.status(Status.NOT_FOUND).entity(result).build();
+    // }
+    // }
 
     @DELETE
     @Path("/{id}")

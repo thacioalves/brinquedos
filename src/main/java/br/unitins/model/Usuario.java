@@ -9,51 +9,44 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
-public class Usuario extends DefaultEntity{
+public class Usuario extends DefaultEntity {
 
-    private String nome;
-    private String cpf;
-    private String email;
+    private String login;
     private String senha;
-    private Sexo sexo;
 
     @ElementCollection
-    @CollectionTable(name ="perfis", joinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "id"))
+    @CollectionTable(name = "perfis", joinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "id"))
     @Column(name = "perfil", length = 30)
     private Set<Perfil> perfis;
 
-    @OneToMany
-    @JoinColumn(name = "id_endereco")
+    @OneToMany(mappedBy = "usuario")
     private List<Endereco> endereco;
 
     @OneToMany
-    @JoinColumn(name = "id_telefone")
+    @JoinColumn(name = "id_telefone", unique = true)
     private List<Telefone> telefone;
 
-    public String getNome() {
-        return nome;
+    @OneToOne
+    @JoinColumn(name = "id_pessoa", unique = true)
+    private Pessoa pessoa;
+
+    public String getLogin() {
+        return login;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public Pessoa getPessoa() {
+        return pessoa;
     }
 
-    public String getCpf() {
-        return cpf;
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getSenha() {
@@ -64,14 +57,6 @@ public class Usuario extends DefaultEntity{
         this.senha = senha;
     }
 
-    public Sexo getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(Sexo sexo) {
-        this.sexo = sexo;
-    }
-
     public Set<Perfil> getPerfis() {
         return perfis;
     }
@@ -79,7 +64,6 @@ public class Usuario extends DefaultEntity{
     public void setPerfis(Set<Perfil> perfis) {
         this.perfis = perfis;
     }
-
 
     public List<Endereco> getEndereco() {
         return endereco;

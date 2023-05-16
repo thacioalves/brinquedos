@@ -7,18 +7,21 @@ import java.util.Base64;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class HashServiceImpl implements HashService {
 
     private String salt = "#22121ab12";
     private Integer iterationCount = 405;
-    private Integer keylenght = 512;
+    private Integer keylength = 512;
 
     @Override
     public String getHashSenha(String senha) {
         try {
             byte[] result = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512")
                     .generateSecret(
-                            new PBEKeySpec(senha.toCharArray(), salt.getBytes(), iterationCount, keylenght))
+                            new PBEKeySpec(senha.toCharArray(), salt.getBytes(), iterationCount, keylength))
                     .getEncoded();
             return Base64.getEncoder().encodeToString(result);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
