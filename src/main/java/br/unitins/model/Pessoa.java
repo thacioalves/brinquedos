@@ -1,9 +1,12 @@
 package br.unitins.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 
 @Entity
-public class Pessoa {
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Pessoa extends DefaultEntity{
 
     private String nome;
     private String cpf;

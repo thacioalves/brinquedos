@@ -16,13 +16,14 @@ public class Usuario extends DefaultEntity {
 
     private String login;
     private String senha;
+    private String nomeImagem;
 
     @ElementCollection
     @CollectionTable(name = "perfis", joinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "id"))
     @Column(name = "perfil", length = 30)
     private Set<Perfil> perfis;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany
     private List<Endereco> endereco;
 
     @OneToMany
@@ -55,6 +56,14 @@ public class Usuario extends DefaultEntity {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public String getNomeImagem() {
+        return nomeImagem;
+    }
+
+    public void setNomeImagem(String nomeImagem) {
+        this.nomeImagem = nomeImagem;
     }
 
     public Set<Perfil> getPerfis() {
