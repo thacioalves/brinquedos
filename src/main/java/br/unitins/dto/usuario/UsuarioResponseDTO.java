@@ -16,6 +16,7 @@ public record UsuarioResponseDTO(
         String cpf,
         String email,
         String login,
+        String nomeImagem,
 
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Sexo sexo,
@@ -26,13 +27,14 @@ public record UsuarioResponseDTO(
 ) {
    public static UsuarioResponseDTO valueOf(Usuario u){
      if(u.getPessoa() == null)
-        return new UsuarioResponseDTO(u.getId(), null, null, null,u.getLogin(), null, null, null);
+        return new UsuarioResponseDTO(u.getId(), null, null, null,u.getLogin(), null, null, null, null);
         
     return new UsuarioResponseDTO(u.getId(),
         u.getPessoa().getNome(), 
         u.getPessoa().getCpf(), 
         u.getPessoa().getEmail(), 
         u.getLogin(), 
+        u.getNomeImagem(),
         u.getPessoa().getSexo(), 
         u.getTelefone(), 
         u.getEndereco());

@@ -10,7 +10,7 @@ public class Result {
     private String message;
     private boolean success;
 
-    Result(String message) {
+    public Result(String message) {
         this.success = true;
         this.message = message;
     }

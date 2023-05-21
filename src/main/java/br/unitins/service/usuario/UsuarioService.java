@@ -14,6 +14,8 @@ public interface UsuarioService {
 
     UsuarioResponseDTO findByLogin(String login);
 
+    UsuarioResponseDTO update(Long id, String nomeImagem);
+
     // UsuarioResponseDTO create(UsuarioDTO usuariodto);
 
     // UsuarioResponseDTO update(long id, UsuarioDTO usuariodto);
