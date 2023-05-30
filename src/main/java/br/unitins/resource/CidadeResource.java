@@ -2,6 +2,8 @@ package br.unitins.resource;
 
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.Consumes;
@@ -26,11 +28,14 @@ import br.unitins.service.cidade.CidadeService;
 @Produces(MediaType.APPLICATION_JSON)
 public class CidadeResource {
 
+    private static final Logger LOG = Logger.getLogger(CidadeResource.class);
+
     @Inject
     CidadeService cidadeservice;
 
     @GET
     public List<CidadeResponseDTO> getAll() {
+        LOG.info("Buscando todas as cidades.");
         return cidadeservice.getAll();
     }
 

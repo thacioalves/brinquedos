@@ -1,10 +1,8 @@
 package br.unitins.model;
 
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("brinquedo")
 public class Brinquedo extends Produto {
 
     private String marca;

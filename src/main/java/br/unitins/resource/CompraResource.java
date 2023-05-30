@@ -1,5 +1,11 @@
 package br.unitins.resource;
 
+import java.util.List;
+
+import br.unitins.application.Result;
+import br.unitins.dto.compra.CompraDTO;
+import br.unitins.dto.compra.CompraResponseDTO;
+import br.unitins.service.compra.CompraService;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.Consumes;
@@ -14,83 +20,75 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-import br.unitins.application.Result;
-import br.unitins.dto.brinquedo.BrinquedoDTO;
-import br.unitins.dto.brinquedo.BrinquedoResponseDTO;
-import br.unitins.service.brinquedo.BrinquedoService;
-
-import java.util.List;
-
-@Path("/brinquedos")
+@Path("/compras")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class BrinquedoResource {
+public class CompraResource {
 
     @Inject
-    BrinquedoService brinquedoService;
+    CompraService compraService;
 
     @GET
-    public List<BrinquedoResponseDTO> getAll() {
-        return brinquedoService.getAll();
-
+    public List<CompraResponseDTO> getAll() {
+        return compraService.getAll();
     }
 
     @GET
     @Path("/{id}")
-    public BrinquedoResponseDTO findById(@PathParam("id") Long id) {
-        return brinquedoService.findById(id);
+    public CompraResponseDTO findById(@PathParam("id") Long id) {
+        return compraService.findById(id);
     }
 
     @POST
-    public Response insert(BrinquedoDTO brinquedodto) {
+    public Response insert(CompraDTO compradto) {
         try {
-            BrinquedoResponseDTO brinquedo = brinquedoService.create(brinquedodto);
-            return Response.status(Status.CREATED).entity(brinquedo).build();
+            CompraResponseDTO compra = compraService.create(compradto);
+            return Response.status(Status.CREATED).entity(compra).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
             return Response.status(Status.NOT_FOUND).entity(result).build();
-        }
 
+        }
     }
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, BrinquedoDTO brinquedodto) {
+    public Response update(@PathParam("id") Long id, CompraDTO compradto) {
         try {
-            BrinquedoResponseDTO brinquedo = brinquedoService.update(id, brinquedodto);
-            return Response.status(Status.NO_CONTENT).entity(brinquedo).build();
+            CompraResponseDTO compra = compraService.update(id, compradto);
+            return Response.status(Status.NO_CONTENT).entity(compra).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
             return Response.status(Status.NOT_FOUND).entity(result).build();
-        }
 
+        }
     }
 
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
-        brinquedoService.delete(id);
+        compraService.delete(id);
         return Response
                 .status(Status.NO_CONTENT)
                 .build();
+
     }
 
     @GET
     @Path("/search/{id}")
-    public BrinquedoResponseDTO searchId(@PathParam("id") Long id) {
-        return brinquedoService.findById(id);
+    public CompraResponseDTO searchId(@PathParam("id") Long id) {
+        return compraService.findById(id);
     }
 
     @GET
     @Path("/search/{nome}")
-    public List<BrinquedoResponseDTO> search(@PathParam("nome") String nome) {
-        return brinquedoService.findByNome(nome);
+    public List<CompraResponseDTO> search(@PathParam("nome") String nome) {
+        return compraService.findByNome(nome);
     }
 
     @GET
     @Path("/count")
     public long count() {
-        return brinquedoService.count();
+        return compraService.count();
     }
-
 }
