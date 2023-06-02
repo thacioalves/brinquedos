@@ -1,5 +1,7 @@
 package br.unitins.resource;
 
+import org.jboss.logging.Logger;
+
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.Consumes;
@@ -29,8 +31,12 @@ public class BrinquedoResource {
     @Inject
     BrinquedoService brinquedoService;
 
+    private static final Logger LOG = Logger.getLogger(BrinquedoResource.class);
+
     @GET
     public List<BrinquedoResponseDTO> getAll() {
+        LOG.info("Buscando todos os brinquedos.");
+        LOG.debug("ERRO DE DEBUG.");
         return brinquedoService.getAll();
 
     }
@@ -43,26 +49,41 @@ public class BrinquedoResource {
 
     @POST
     public Response insert(BrinquedoDTO brinquedodto) {
+        LOG.infof("Inserindo um brinquedo: %s", brinquedodto.nome());
+        Result result = null;
         try {
             BrinquedoResponseDTO brinquedo = brinquedoService.create(brinquedodto);
+            LOG.infof("Brinquedo (%d) criado com sucesso.", brinquedo.id());
             return Response.status(Status.CREATED).entity(brinquedo).build();
         } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            LOG.error("Erro ao incluir um brinquedo.");
+            LOG.debug(e.getMessage());
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            LOG.fatal("Erro sem identificacao: " + e.getMessage());
+            result = new Result(e.getMessage(), false);
         }
-
+        return Response.status(Status.NOT_FOUND).entity(result).build();
     }
 
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, BrinquedoDTO brinquedodto) {
+        LOG.infof("Atualizando um brinquedo: %s", brinquedodto.nome());
+        Result result = null;
         try {
             BrinquedoResponseDTO brinquedo = brinquedoService.update(id, brinquedodto);
+            LOG.infof("Brinquedo (%d) atualizado com sucesso.", brinquedo.id());
             return Response.status(Status.NO_CONTENT).entity(brinquedo).build();
         } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            LOG.error("Erro ao atualizar um brinquedo.");
+            LOG.debug(e.getMessage());
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            LOG.fatal("Erro sem identificacao: " + e.getMessage());
+            result = new Result(e.getMessage(), false);
         }
+        return Response.status(Status.NOT_FOUND).entity(result).build();
 
     }
 

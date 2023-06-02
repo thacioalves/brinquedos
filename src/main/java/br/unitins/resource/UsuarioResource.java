@@ -2,6 +2,8 @@ package br.unitins.resource;
 
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -24,8 +26,12 @@ public class UsuarioResource {
     @Inject
     UsuarioService usuarioservice;
 
+    private static final Logger LOG = Logger.getLogger(UsuarioResource.class);
+
     @GET
     public List<UsuarioResponseDTO> getAll() {
+        LOG.info("Buscando todos os Usuarios.");
+        LOG.debug("ERRO DE DEBUG.");
         return usuarioservice.getAll();
     }
 

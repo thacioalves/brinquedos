@@ -2,6 +2,8 @@ package br.unitins.resource;
 
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.Consumes;
@@ -21,7 +23,6 @@ import br.unitins.dto.estado.EstadoDTO;
 import br.unitins.dto.estado.EstadoResponseDTO;
 import br.unitins.service.estado.EstadoService;
 
-
 @Path("/estados")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -30,8 +31,12 @@ public class EstadoResource {
     @Inject
     EstadoService estadoservice;
 
+    private static final Logger LOG = Logger.getLogger(EnderecoResource.class);
+
     @GET
     public List<EstadoResponseDTO> getAll() {
+        LOG.info("Buscando todos os estados.");
+        LOG.debug("ERRO DE DEBUG.");
         return estadoservice.getAll();
     }
 
@@ -43,25 +48,41 @@ public class EstadoResource {
 
     @POST
     public Response insert(EstadoDTO estadodto) {
+        LOG.infof("Inserindo um estado: %s", estadodto.nome());
+        Result result = null;
         try {
             EstadoResponseDTO estado = estadoservice.create(estadodto);
+            LOG.infof("Estado (%d) criado com sucesso.", estado.id());
             return Response.status(Status.CREATED).entity(estado).build();
         } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            LOG.error("Erro ao incluir um estado.");
+            LOG.debug(e.getMessage());
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            LOG.fatal("Erro sem identificacao: " + e.getMessage());
+            result = new Result(e.getMessage(), false);
         }
+        return Response.status(Status.NOT_FOUND).entity(result).build();
     }
 
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, EstadoDTO estadodto) {
+        LOG.infof("Atualizando um estado: %s", estadodto.nome());
+        Result result = null;
         try {
-            EstadoResponseDTO estado = estadoservice.create(estadodto);
+            EstadoResponseDTO estado = estadoservice.update(id, estadodto);
+            LOG.infof("Estado (%d) atualizado com sucesso.", estado.id());
             return Response.status(Status.NO_CONTENT).entity(estado).build();
         } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            LOG.error("Erro ao atualizar um estado.");
+            LOG.debug(e.getMessage());
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            LOG.fatal("Erro sem identificacao: " + e.getMessage());
+            result = new Result(e.getMessage(), false);
         }
+        return Response.status(Status.NOT_FOUND).entity(result).build();
     }
 
     @DELETE

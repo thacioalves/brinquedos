@@ -2,6 +2,8 @@ package br.unitins.resource;
 
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.Consumes;
@@ -25,11 +27,16 @@ import br.unitins.service.endereco.EnderecoService;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class EnderecoResource {
+
     @Inject
     EnderecoService enderecoservice;
 
+    private static final Logger LOG = Logger.getLogger(EnderecoResource.class);
+
     @GET
     public List<EnderecoResponseDTO> getAll() {
+        LOG.info("Buscando todos os endereços.");
+        LOG.debug("ERRO DE DEBUG.");
         return enderecoservice.getAll();
     }
 
@@ -41,25 +48,42 @@ public class EnderecoResource {
 
     @POST
     public Response insert(EnderecoDTO enderecodto) {
+        LOG.infof("Inserindo um endereço: %s", enderecodto.idCidade());
+        Result result = null;
         try {
             EnderecoResponseDTO endereco = enderecoservice.create(enderecodto);
+            LOG.infof("Endereço (%d) criado com sucesso.", endereco.id());
             return Response.status(Status.CREATED).entity(endereco).build();
         } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            LOG.error("Erro ao incluir um endereço.");
+            LOG.debug(e.getMessage());
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            LOG.fatal("Erro sem identificacao: " + e.getMessage());
+            result = new Result(e.getMessage(), false);
         }
+        return Response.status(Status.NOT_FOUND).entity(result).build();
     }
 
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, EnderecoDTO enderecodto) {
+        LOG.infof("Atualizando um endereço: %s", enderecodto.idCidade());
+        Result result = null;
         try {
             EnderecoResponseDTO endereco = enderecoservice.update(id, enderecodto);
+            LOG.infof("Endereço (%d) atualizado com sucesso.", endereco.id());
             return Response.status(Status.NO_CONTENT).entity(endereco).build();
         } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            LOG.error("Erro ao atualizar um endereço.");
+            LOG.debug(e.getMessage());
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            LOG.fatal("Erro sem identificacao: " + e.getMessage());
+            result = new Result(e.getMessage(), false);
         }
+        return Response.status(Status.NOT_FOUND).entity(result).build();
+
     }
 
     @DELETE

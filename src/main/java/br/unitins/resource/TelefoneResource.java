@@ -2,6 +2,8 @@ package br.unitins.resource;
 
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.Consumes;
@@ -29,8 +31,12 @@ public class TelefoneResource {
     @Inject
     TelefoneService telefoneservice;
 
+    private static final Logger LOG = Logger.getLogger(TelefoneResource.class);
+
     @GET
     public List<TelefoneResponseDTO> getAll() {
+        LOG.info("Buscando todos os telefones.");
+        LOG.debug("ERRO DE DEBUG.");
         return telefoneservice.getAll();
 
     }
@@ -43,25 +49,41 @@ public class TelefoneResource {
 
     @POST
     public Response insert(TelefoneDTO telefonedto) {
+        LOG.infof("Inserindo um telefone: %s", telefonedto.codigoArea(), telefonedto.numero());
+        Result result = null;
         try {
             TelefoneResponseDTO telefone = telefoneservice.create(telefonedto);
+            LOG.infof("Telefone (%d) criado com sucesso.", telefone.id());
             return Response.status(Status.CREATED).entity(telefone).build();
         } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            LOG.error("Erro ao incluir um telefone.");
+            LOG.debug(e.getMessage());
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            LOG.fatal("Erro sem identificacao: " + e.getMessage());
+            result = new Result(e.getMessage(), false);
         }
+        return Response.status(Status.NOT_FOUND).entity(result).build();
     }
 
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, TelefoneDTO telefonedto) {
+        LOG.infof("Atualizando um telefone: %s", telefonedto.codigoArea(), telefonedto.numero());
+        Result result = null;
         try {
-            TelefoneResponseDTO telefone = telefoneservice.create(telefonedto);
+            TelefoneResponseDTO telefone = telefoneservice.update(id, telefonedto);
+            LOG.infof("Telefone (%d) atualizado com sucesso.", telefone.id());
             return Response.status(Status.NO_CONTENT).entity(telefone).build();
         } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            LOG.error("Erro ao atualizar um telefone.");
+            LOG.debug(e.getMessage());
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            LOG.fatal("Erro sem identificacao: " + e.getMessage());
+            result = new Result(e.getMessage(), false);
         }
+        return Response.status(Status.NOT_FOUND).entity(result).build();
     }
 
     @DELETE

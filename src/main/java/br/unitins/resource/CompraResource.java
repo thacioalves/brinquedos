@@ -2,6 +2,8 @@ package br.unitins.resource;
 
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 import br.unitins.application.Result;
 import br.unitins.dto.compra.CompraDTO;
 import br.unitins.dto.compra.CompraResponseDTO;
@@ -28,8 +30,12 @@ public class CompraResource {
     @Inject
     CompraService compraService;
 
+    private static final Logger LOG = Logger.getLogger(BrinquedoResource.class);
+
     @GET
     public List<CompraResponseDTO> getAll() {
+        LOG.info("Buscando todas as compras.");
+        LOG.debug("ERRO DE DEBUG.");
         return compraService.getAll();
     }
 
