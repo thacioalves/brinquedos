@@ -1,7 +1,6 @@
 package br.unitins.service.usuario;
 
 import java.util.List;
-
 import br.unitins.dto.usuario.UsuarioResponseDTO;
 import br.unitins.model.Usuario;
 

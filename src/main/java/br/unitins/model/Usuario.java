@@ -18,6 +18,12 @@ public class Usuario extends DefaultEntity {
     private String senha;
     private String nomeImagem;
 
+    @OneToOne
+    private Pagamento pagamento;
+
+    @OneToOne
+    private Compra compra;
+
     @ElementCollection
     @CollectionTable(name = "perfis", joinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "id"))
     @Column(name = "perfil", length = 30)
@@ -88,6 +94,22 @@ public class Usuario extends DefaultEntity {
 
     public void setTelefone(List<Telefone> telefone) {
         this.telefone = telefone;
+    }
+
+    public Pagamento getPagamento() {
+        return pagamento;
+    }
+
+    public void setPagamento(Pagamento pagamento) {
+        this.pagamento = pagamento;
+    }
+
+    public Compra getCompra() {
+        return compra;
+    }
+
+    public void setCompra(Compra compra) {
+        this.compra = compra;
     }
 
 }

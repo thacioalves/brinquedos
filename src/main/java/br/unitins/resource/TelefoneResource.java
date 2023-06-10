@@ -2,8 +2,10 @@ package br.unitins.resource;
 
 import java.util.List;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.Consumes;
@@ -21,7 +23,9 @@ import jakarta.ws.rs.core.Response.Status;
 import br.unitins.application.Result;
 import br.unitins.dto.telefone.TelefoneDTO;
 import br.unitins.dto.telefone.TelefoneResponseDTO;
+import br.unitins.dto.usuario.UsuarioResponseDTO;
 import br.unitins.service.telefone.TelefoneService;
+import br.unitins.service.usuario.UsuarioService;
 
 @Path("/telefones")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -31,9 +35,27 @@ public class TelefoneResource {
     @Inject
     TelefoneService telefoneservice;
 
+    @Inject
+    JsonWebToken jwt;
+
+    @Inject
+    UsuarioService usuarioService;
+
     private static final Logger LOG = Logger.getLogger(TelefoneResource.class);
 
     @GET
+    @RolesAllowed({ "Admin", "User" })
+    public Response getUsuario() {
+
+        // obtendo o login a partir do token
+        String login = jwt.getSubject();
+        UsuarioResponseDTO usuario = usuarioService.findByLogin(login);
+
+        return Response.ok(usuario).build();
+    }
+
+    @GET
+    @RolesAllowed({ "Admin" })
     public List<TelefoneResponseDTO> getAll() {
         LOG.info("Buscando todos os telefones.");
         LOG.debug("ERRO DE DEBUG.");
@@ -43,11 +65,13 @@ public class TelefoneResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public TelefoneResponseDTO findById(@PathParam("id") Long id) {
         return telefoneservice.findById(id);
     }
 
     @POST
+    @RolesAllowed({ "Admin" })
     public Response insert(TelefoneDTO telefonedto) {
         LOG.infof("Inserindo um telefone: %s", telefonedto.codigoArea(), telefonedto.numero());
         Result result = null;
@@ -68,6 +92,7 @@ public class TelefoneResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response update(@PathParam("id") Long id, TelefoneDTO telefonedto) {
         LOG.infof("Atualizando um telefone: %s", telefonedto.codigoArea(), telefonedto.numero());
         Result result = null;
@@ -88,6 +113,7 @@ public class TelefoneResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response delete(@PathParam("id") Long id) {
         telefoneservice.delete(id);
         return Response
@@ -97,18 +123,21 @@ public class TelefoneResource {
 
     @GET
     @Path("/search/{id}")
+    @RolesAllowed({ "Admin" })
     public TelefoneResponseDTO searchId(@PathParam("id") Long id) {
         return telefoneservice.findById(id);
     }
 
     @GET
     @Path("/search/{nome}")
+    @RolesAllowed({ "Admin" })
     public List<TelefoneResponseDTO> search(@PathParam("nome") String nome) {
         return telefoneservice.findByNumero(nome);
     }
 
     @GET
     @Path("/count")
+    @RolesAllowed({ "Admin" })
     public long count() {
         return telefoneservice.count();
     }

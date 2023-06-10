@@ -2,9 +2,11 @@ package br.unitins;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
 import org.junit.jupiter.api.Test;
 
+import br.unitins.dto.AuthUsuarioDTO;
 import br.unitins.dto.brinquedo.BrinquedoDTO;
 import br.unitins.dto.brinquedo.BrinquedoResponseDTO;
 import br.unitins.service.brinquedo.BrinquedoService;
@@ -15,6 +17,8 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import org.junit.jupiter.api.BeforeEach;
+
 import jakarta.inject.Inject;
 
 @QuarkusTest
@@ -23,9 +27,30 @@ public class BrinquedoResourceTest {
         @Inject
         BrinquedoService brinquedoservice;
 
+        private String token;
+
+        @BeforeEach
+        public void setUp() {
+                var auth = new AuthUsuarioDTO("teste", "123");
+
+                Response response = (Response) 
+                                 given()
+                                .contentType("application/json")
+                                .body(auth)
+                                .when().post("/auth")
+                                .then().statusCode(200)
+                                .extract()
+                                .response();
+                
+                                token = response.header("Authorization");
+        }
+
+
+
         @Test
         public void testGetAll() {
                 given()
+                                .header("Authorization", "Bearer " + token)
                                 .when().get("/brinquedos")
                                 .then()
                                 .statusCode(200);
@@ -40,6 +65,7 @@ public class BrinquedoResourceTest {
 
                 BrinquedoResponseDTO brinquedocreate = brinquedoservice.create(brinquedo);
                 given()
+                                .header("Authorization", "Bearer " + token)
                                 .contentType(ContentType.JSON)
                                 .body(brinquedocreate)
                                 .when().post("/brinquedos")
@@ -69,6 +95,7 @@ public class BrinquedoResourceTest {
 
                 BrinquedoResponseDTO brinquedoatualizado = brinquedoservice.update(id, brinquedoupdate);
                 given()
+                                .header("Authorization", "Bearer " + token)
                                 .contentType(ContentType.JSON)
                                 .body(brinquedoatualizado)
                                 .when().put("/brinquedos/" + id)
@@ -94,6 +121,7 @@ public class BrinquedoResourceTest {
                 Long id = brinquedoservice.create(brinquedo).id();
 
                 given()
+                                .header("Authorization", "Bearer " + token)
                                 .when().delete("/brinquedos/" + id)
                                 .then()
                                 .statusCode(204);
@@ -108,5 +136,41 @@ public class BrinquedoResourceTest {
                         assertNull(brinquedoresponse);
                 }
 
+        }
+
+        @Test
+        public void testFindById() {
+                BrinquedoDTO brinquedo = new BrinquedoDTO(
+                                "boneco",
+                                10.00,
+                                "6", "aleatoria", 30, "boneco de pelucia");
+                Long id = brinquedoservice.create(brinquedo).id();
+
+                given()
+                                .header("Authorization", "Bearer " + token)
+                                .when().get("/brinquedos/" + id)
+                                .then()
+                                .statusCode(200)
+                                .body(notNullValue());
+        }
+
+        @Test
+        public void testCount() {
+                given()
+                                .header("Authorization", "Bearer " + token)
+                                .when().get("/brinquedos/count")
+                                .then()
+                                .statusCode(200)
+                                .body(notNullValue());
+        }
+
+        @Test
+        public void testSearch() {
+                given()
+                                .header("Authorization", "Bearer " + token)
+                                .when().get("/brinquedos/search/nome")
+                                .then()
+                                .statusCode(200)
+                                .body(notNullValue());
         }
 }

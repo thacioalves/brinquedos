@@ -12,16 +12,16 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class HashServiceImpl implements HashService {
 
-    private String salt = "#22121ab12";
+    private String salt = "#blahxyz17";
     private Integer iterationCount = 405;
-    private Integer keylength = 512;
+    private Integer keyLength = 512;
 
     @Override
     public String getHashSenha(String senha) {
         try {
             byte[] result = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512")
                     .generateSecret(
-                            new PBEKeySpec(senha.toCharArray(), salt.getBytes(), iterationCount, keylength))
+                            new PBEKeySpec(senha.toCharArray(), salt.getBytes(), iterationCount, keyLength))
                     .getEncoded();
             return Base64.getEncoder().encodeToString(result);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
@@ -34,8 +34,8 @@ public class HashServiceImpl implements HashService {
         HashService service = new HashServiceImpl();
 
         System.out.println();
-        System.out.println(service.getHashSenha("senha"));
-        System.out.println(service.getHashSenha("senha"));
+        System.out.println(service.getHashSenha("123"));
+        System.out.println(service.getHashSenha("senhA"));
         System.out.println(service.getHashSenha("Senha"));
     }
 

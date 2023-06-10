@@ -1,18 +1,14 @@
 package br.unitins.service.usuario;
 
 import java.util.List;
-
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-
 import jakarta.validation.Validator;
 import jakarta.ws.rs.NotFoundException;
-
 import br.unitins.dto.usuario.UsuarioResponseDTO;
-
 import br.unitins.model.Usuario;
 import br.unitins.repository.UsuarioRepository;
 
@@ -55,11 +51,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     // validar(usuariodto);
 
     // Usuario entity = new Usuario();
-    // entity.setNome(usuariodto.nome());
-    // entity.setCpf(usuariodto.cpf());
     // entity.setLogin(usuariodto.login());
     // entity.setSenha(usuariodto.senha());
-    // entity.setSexo(Sexo.valueOf(usuariodto.sexo()));
 
     // entity.setEndereco(new ArrayList<Endereco>());
     // for (EnderecoDTO enderecos : usuariodto.endereco()) {
@@ -164,7 +157,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional
     public UsuarioResponseDTO update(Long id, String nomeImagem) {
-       
+
         Usuario entity = usuariorepository.findById(id);
         entity.setNomeImagem(nomeImagem);
 

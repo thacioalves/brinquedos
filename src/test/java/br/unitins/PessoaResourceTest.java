@@ -1,15 +1,15 @@
 package br.unitins;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-
 import org.junit.jupiter.api.Test;
 
 import br.unitins.dto.AuthUsuarioDTO;
-import br.unitins.dto.estado.EstadoDTO;
-import br.unitins.dto.estado.EstadoResponseDTO;
-import br.unitins.service.estado.EstadoService;
+import br.unitins.dto.pessoa.PessoaDTO;
+import br.unitins.dto.pessoa.PessoaResponseDTO;
+import br.unitins.service.pessoa.PessoaService;
+import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import jakarta.inject.Inject;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
@@ -19,13 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.BeforeEach;
 
-import jakarta.inject.Inject;
-
 @QuarkusTest
-public class EstadoResourceTest {
+public class PessoaResourceTest {
 
         @Inject
-        EstadoService estadoservice;
+        PessoaService pessoaService;
 
         private String token;
 
@@ -48,73 +46,88 @@ public class EstadoResourceTest {
         public void testGetAll() {
                 given()
                                 .header("Authorization", "Bearer " + token)
-                                .when().get("/estados")
+                                .when().get("/pessoas")
                                 .then()
                                 .statusCode(200);
         }
 
         @Test
         public void testInsert() {
-                EstadoDTO estado = new EstadoDTO(
-                                "Tocantins", "TO");
+                PessoaDTO pessoa = new PessoaDTO("aleatoria",
+                                "111.111.111-11",
+                                "teste@gmail.com",
+                                1);
 
-                EstadoResponseDTO estadocreate = estadoservice.create(estado);
+                PessoaResponseDTO pessoaCreate = pessoaService.create(pessoa);
                 given()
                                 .header("Authorization", "Bearer " + token)
                                 .contentType(ContentType.JSON)
-                                .body(estadocreate)
-                                .when().post("/estados")
+                                .body(pessoaCreate)
+                                .when().post("/pessoas")
                                 .then()
                                 .statusCode(201)
-                                .body("id", notNullValue(), "nome", is("Tocantins"), "sigla", is("TO"));
+                                .body("id", notNullValue(),
+                                                "nome", is("aleatoria"),
+                                                "cpf", is("111.111.111-11"),
+                                                "email", is("teste@gmail.com"),
+                                                "sexo", is(1));
         }
 
         @Test
         public void testUpdate() {
-                // Adicionando um estado no banco de dados
-                EstadoDTO estado = new EstadoDTO(
-                                "Tocantins", "TO");
-                Long id = estadoservice.create(estado).id();
+                // Adicionando uma pessoa no banco de dados
+                PessoaDTO pessoa = new PessoaDTO("aleatoria",
+                                "111.111.111-11",
+                                "teste@gmail.com",
+                                1);
+                Long id = pessoaService.create(pessoa).id();
 
-                // Criando outro estado para atuailzacao
-                EstadoDTO estadoupdate = new EstadoDTO(
-                                "Sao Paulo", "SP");
+                // Criando outra pessoa para atuailzacao
+                PessoaDTO pessoaUpdate = new PessoaDTO("teste1",
+                                "111.111.111-12",
+                                "teste1@gmail.com",
+                                2);
 
-                EstadoResponseDTO estadoatualizado = estadoservice.update(id, estadoupdate);
+                PessoaResponseDTO pessoaAtualizada = pessoaService.update(id, pessoaUpdate);
+
                 given()
                                 .header("Authorization", "Bearer " + token)
                                 .contentType(ContentType.JSON)
-                                .body(estadoatualizado)
-                                .when().put("/estados/" + id)
+                                .body(pessoaAtualizada)
+                                .when().put("/pessoas/" + id)
                                 .then()
                                 .statusCode(204);
 
                 // Verificando se os dados foram atualizados no banco de dados
-                EstadoResponseDTO estadoresponse = estadoservice.findById(id);
-                assertThat(estadoresponse.nome(), is("Sao Paulo"));
-                assertThat(estadoresponse.sigla(), is("SP"));
+                PessoaResponseDTO pessoaResponse = pessoaService.findById(id);
+                assertThat(pessoaResponse.nome(), is("teste1"));
+                assertThat(pessoaResponse.cpf(), is("111.111.111-12"));
+                assertThat(pessoaResponse.email(), is("teste1@gmail.com"));
+                assertThat(pessoaResponse.sexo(), is(2));
         }
 
         @Test
         public void testDelete() {
-                // Adicionando um estado no banco de dados
-                EstadoDTO estado = new EstadoDTO(
-                                "Tocantins", "TO");
-                Long id = estadoservice.create(estado).id();
+                // Adicionando uma pessoa no banco de dados
+                PessoaDTO pessoa = new PessoaDTO("teste",
+                                "111.111.111-11",
+                                "teste@gmail.com",
+                                1);
+                Long id = pessoaService.create(pessoa).id();
                 given()
                                 .header("Authorization", "Bearer " + token)
-                                .when().delete("/estados/" + id)
+                                .when().delete("/pessoas/" + id)
                                 .then()
                                 .statusCode(204);
 
-                // verificando se o estado foi excluido
-                EstadoResponseDTO estadoresponse = null;
+                // verificando se a pessoa foi excluida
+                PessoaResponseDTO pessoaResponse = null;
                 try {
-                        estadoresponse = estadoservice.findById(id);
+                        pessoaResponse = pessoaService.findById(id);
                 } catch (Exception e) {
                         assert true;
                 } finally {
-                        assertNull(estadoresponse);
+                        assertNull(pessoaResponse);
                 }
 
         }
@@ -123,7 +136,7 @@ public class EstadoResourceTest {
         public void testFindById() {
                 given()
                                 .header("Authorization", "Bearer " + token)
-                                .when().get("/estados/1")
+                                .when().get("/pessoas/1")
                                 .then()
                                 .statusCode(200)
                                 .body(notNullValue());
@@ -133,7 +146,7 @@ public class EstadoResourceTest {
         public void testCount() {
                 given()
                                 .header("Authorization", "Bearer " + token)
-                                .when().get("/estados/count")
+                                .when().get("/pessoas/count")
                                 .then()
                                 .statusCode(200)
                                 .body(notNullValue());
@@ -143,9 +156,10 @@ public class EstadoResourceTest {
         public void testSearch() {
                 given()
                                 .header("Authorization", "Bearer " + token)
-                                .when().get("/estados/search/tocantins")
+                                .when().get("/pessoas/search/nome")
                                 .then()
                                 .statusCode(200)
                                 .body(notNullValue());
         }
+
 }

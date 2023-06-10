@@ -12,7 +12,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class TokenJwtServiceImpl implements TokenJwtService {
 
-    private static final Duration EXPIRATION_TIME = Duration.ofHours(24);
+    private static final Duration EXPIRATION_TIME = Duration.ofHours(168);
 
     @Override
     public String generateJwt(Usuario usuario) {

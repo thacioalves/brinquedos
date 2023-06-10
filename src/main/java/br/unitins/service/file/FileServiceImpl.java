@@ -28,7 +28,7 @@ public class FileServiceImpl implements FileService {
             throw new IOException("Tipo de imagem não suportada.");
         }
 
-        // verificando o tamanho do arquivo, não permitor maior que 10 megas
+        // verificando o tamanho do arquivo, não permitir maior que 10 megas
         if (imagem.length > (1024 * 1024 * 10))
             throw new IOException("Arquivo muito grande.");
 

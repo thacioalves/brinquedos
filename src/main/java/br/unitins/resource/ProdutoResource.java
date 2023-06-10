@@ -51,7 +51,7 @@ public class ProdutoResource {
     @Inject
     FileService fileService;
 
-    private static final Logger LOG = Logger.getLogger(EnderecoResource.class);
+    private static final Logger LOG = Logger.getLogger(ProdutoResource.class);
 
     @GET
     @RolesAllowed({ "Admin", "User" })
@@ -99,6 +99,7 @@ public class ProdutoResource {
     }
 
     @GET
+    @RolesAllowed({ "Admin" })
     public List<ProdutoResponseDTO> getAll() {
         LOG.info("Buscando todos os produtos.");
         LOG.debug("ERRO DE DEBUG.");
@@ -107,11 +108,13 @@ public class ProdutoResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public ProdutoResponseDTO findById(@PathParam("id") Long id) {
         return produtoservice.findById(id);
     }
 
     @POST
+    @RolesAllowed({ "Admin" })
     public Response insert(ProdutoDTO produtodto) {
         LOG.infof("Inserindo um produto: %s", produtodto.nome());
         Result result = null;
@@ -132,6 +135,7 @@ public class ProdutoResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response update(@PathParam("id") Long id, ProdutoDTO produtodto) {
         LOG.infof("Atualizando um produto: %s", produtodto.nome());
         Result result = null;
@@ -152,6 +156,7 @@ public class ProdutoResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response delete(@PathParam("id") Long id) {
         produtoservice.delete(id);
         return Response.status(Status.NO_CONTENT).build();
@@ -159,12 +164,14 @@ public class ProdutoResource {
 
     @GET
     @Path("/count")
+    @RolesAllowed({ "Admin" })
     public long count() {
         return produtoservice.count();
     }
 
     @GET
     @Path("/search/{nome}")
+    @RolesAllowed({ "Admin" })
     public List<ProdutoResponseDTO> search(@PathParam("nome") String nome) {
         return produtoservice.findByNome(nome);
 

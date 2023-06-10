@@ -2,9 +2,11 @@ package br.unitins;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
 import org.junit.jupiter.api.Test;
 
+import br.unitins.dto.AuthUsuarioDTO;
 import br.unitins.dto.cidade.CidadeDTO;
 import br.unitins.dto.endereco.EnderecoDTO;
 import br.unitins.dto.endereco.EnderecoResponseDTO;
@@ -20,6 +22,8 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import org.junit.jupiter.api.BeforeEach;
+
 import jakarta.inject.Inject;
 
 @QuarkusTest
@@ -34,9 +38,27 @@ public class EnderecoResourceTest {
         @Inject
         EstadoService estadoservice;
 
+        private String token;
+
+        @BeforeEach
+        public void setUp() {
+                var auth = new AuthUsuarioDTO("teste", "123");
+
+                Response response = (Response) given()
+                                .contentType("application/json")
+                                .body(auth)
+                                .when().post("/auth")
+                                .then().statusCode(200)
+                                .extract()
+                                .response();
+
+                token = response.header("Authorization");
+        }
+
         @Test
         public void testGetAll() {
                 given()
+                                .header("Authorization", "Bearer " + token)
                                 .when().get("/enderecos")
                                 .then()
                                 .statusCode(200);
@@ -51,6 +73,7 @@ public class EnderecoResourceTest {
                                 "604 sul", "Plano Diretor", "alameda A", "QI 17 LT 30", "12345678", idCidade);
 
                 given()
+                                .header("Authorization", "Bearer " + token)
                                 .contentType(ContentType.JSON)
                                 .body(enderecos)
                                 .when().post("/enderecos")
@@ -74,6 +97,7 @@ public class EnderecoResourceTest {
 
                 EnderecoResponseDTO enderecoatualizado = enderecoservice.update(id, enderecoupdate);
                 given()
+                                .header("Authorization", "Bearer " + token)
                                 .contentType(ContentType.JSON)
                                 .body(enderecoatualizado)
                                 .when().put("/enderecos/" + id)
@@ -97,6 +121,7 @@ public class EnderecoResourceTest {
                                 "604 sul", "Plano Diretor", "alameda A", "QI 17 LT 30", "88888-864", (long) 1);
                 Long id = enderecoservice.create(endereco).id();
                 given()
+                                .header("Authorization", "Bearer " + token)
                                 .when().delete("/enderecos/" + id)
                                 .then()
                                 .statusCode(204);
@@ -111,5 +136,35 @@ public class EnderecoResourceTest {
                         assertNull(enderecoresponse);
                 }
 
+        }
+
+        @Test
+        public void testFindById() {
+                given()
+                                .header("Authorization", "Bearer " + token)
+                                .when().get("/enderecos/id")
+                                .then()
+                                .statusCode(200)
+                                .body(notNullValue());
+        }
+
+        @Test
+        public void testCount() {
+                given()
+                                .header("Authorization", "Bearer " + token)
+                                .when().get("/enderecos/count")
+                                .then()
+                                .statusCode(200)
+                                .body(notNullValue());
+        }
+
+        @Test
+        public void testSearch() {
+                given()
+                                .header("Authorization", "Bearer " + token)
+                                .when().get("/enderecos/search")
+                                .then()
+                                .statusCode(200)
+                                .body(notNullValue());
         }
 }

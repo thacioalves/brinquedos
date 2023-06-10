@@ -25,11 +25,22 @@ public record UsuarioResponseDTO(
         List<Endereco> endereco
 
 ) {
+
    public static UsuarioResponseDTO valueOf(Usuario u){
      if(u.getPessoa() == null)
-        return new UsuarioResponseDTO(u.getId(), null, null, null,u.getLogin(), null, null, null, null);
+        return new UsuarioResponseDTO(
+         u.getId(),
+         null,
+         null, 
+         null,
+         u.getLogin(),
+         null, 
+         null, 
+         null, 
+         null);
         
-    return new UsuarioResponseDTO(u.getId(),
+    return new UsuarioResponseDTO(
+        u.getId(),
         u.getPessoa().getNome(), 
         u.getPessoa().getCpf(), 
         u.getPessoa().getEmail(), 
@@ -39,6 +50,5 @@ public record UsuarioResponseDTO(
         u.getTelefone(), 
         u.getEndereco());
    }
-
 
 }

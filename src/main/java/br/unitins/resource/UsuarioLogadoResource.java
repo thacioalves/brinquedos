@@ -82,6 +82,4 @@ public class UsuarioLogadoResource {
         return response.build();
     }
 
-    // alterar senha, informando a antiga e a nova
-
 }

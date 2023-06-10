@@ -1,8 +1,16 @@
 package br.unitins.resource;
 
+import java.util.List;
+
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
 
+import br.unitins.application.Result;
+import br.unitins.dto.item.ItemCompraDTO;
+import br.unitins.dto.item.ItemCompraResponseDTO;
+import br.unitins.dto.usuario.UsuarioResponseDTO;
+import br.unitins.service.item.ItemCompraService;
+import br.unitins.service.usuario.UsuarioService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
@@ -18,22 +26,13 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-import br.unitins.application.Result;
-import br.unitins.dto.brinquedo.BrinquedoDTO;
-import br.unitins.dto.brinquedo.BrinquedoResponseDTO;
-import br.unitins.dto.usuario.UsuarioResponseDTO;
-import br.unitins.service.brinquedo.BrinquedoService;
-import br.unitins.service.usuario.UsuarioService;
-
-import java.util.List;
-
-@Path("/brinquedos")
+@Path("/itemcompras")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class BrinquedoResource {
+public class ItemCompraResource {
 
     @Inject
-    BrinquedoService brinquedoService;
+    ItemCompraService itemCompraService;
 
     @Inject
     JsonWebToken jwt;
@@ -41,7 +40,7 @@ public class BrinquedoResource {
     @Inject
     UsuarioService usuarioService;
 
-    private static final Logger LOG = Logger.getLogger(BrinquedoResource.class);
+    private static final Logger LOG = Logger.getLogger(ItemCompraResource.class);
 
     @GET
     @RolesAllowed({ "Admin", "User" })
@@ -56,31 +55,30 @@ public class BrinquedoResource {
 
     @GET
     @RolesAllowed({ "Admin" })
-    public List<BrinquedoResponseDTO> getAll() {
-        LOG.info("Buscando todos os brinquedos.");
+    public List<ItemCompraResponseDTO> getAll() {
+        LOG.info("Buscando todas as compras.");
         LOG.debug("ERRO DE DEBUG.");
-        return brinquedoService.getAll();
-
+        return itemCompraService.getAll();
     }
 
     @GET
-    @RolesAllowed({ "Admin" })
     @Path("/{id}")
-    public BrinquedoResponseDTO findById(@PathParam("id") Long id) {
-        return brinquedoService.findById(id);
+    @RolesAllowed({ "Admin" })
+    public ItemCompraResponseDTO findById(@PathParam("id") Long id) {
+        return itemCompraService.findById(id);
     }
 
     @POST
     @RolesAllowed({ "Admin" })
-    public Response insert(BrinquedoDTO brinquedodto) {
-        LOG.infof("Inserindo um brinquedo: %s", brinquedodto.getClass());
+    public Response insert(ItemCompraDTO itemCompraDTO) {
+        LOG.infof("Inserindo um item compra: %s", itemCompraDTO.getClass());
         Result result = null;
         try {
-            BrinquedoResponseDTO brinquedo = brinquedoService.create(brinquedodto);
-            LOG.infof("Brinquedo (%d) criado com sucesso.", brinquedo.id());
-            return Response.status(Status.CREATED).entity(brinquedo).build();
+            ItemCompraResponseDTO itemCompra = itemCompraService.create(itemCompraDTO);
+            LOG.infof("Brinquedo (%d) criado com sucesso.", itemCompra.id());
+            return Response.status(Status.CREATED).entity(itemCompra).build();
         } catch (ConstraintViolationException e) {
-            LOG.error("Erro ao incluir um brinquedo.");
+            LOG.error("Erro ao incluir um item compra.");
             LOG.debug(e.getMessage());
             result = new Result(e.getConstraintViolations());
         } catch (Exception e) {
@@ -93,13 +91,13 @@ public class BrinquedoResource {
     @PUT
     @Path("/{id}")
     @RolesAllowed({ "Admin" })
-    public Response update(@PathParam("id") Long id, BrinquedoDTO brinquedodto) {
-        LOG.infof("Atualizando um brinquedo: %s", brinquedodto.getClass());
+    public Response update(@PathParam("id") Long id, ItemCompraDTO itemCompraDTO) {
+        LOG.infof("Atualizando um item compra: %s", itemCompraDTO.getClass());
         Result result = null;
         try {
-            BrinquedoResponseDTO brinquedo = brinquedoService.update(id, brinquedodto);
-            LOG.infof("Brinquedo (%d) atualizado com sucesso.", brinquedo.id());
-            return Response.status(Status.NO_CONTENT).entity(brinquedo).build();
+            ItemCompraResponseDTO itemCompra = itemCompraService.update(id, itemCompraDTO);
+            LOG.infof("Brinquedo (%d) atualizado com sucesso.", itemCompra.id());
+            return Response.status(Status.NO_CONTENT).entity(itemCompra).build();
         } catch (ConstraintViolationException e) {
             LOG.error("Erro ao atualizar um brinquedo.");
             LOG.debug(e.getMessage());
@@ -109,38 +107,37 @@ public class BrinquedoResource {
             result = new Result(e.getMessage(), false);
         }
         return Response.status(Status.NOT_FOUND).entity(result).build();
-
     }
 
     @DELETE
     @Path("/{id}")
     @RolesAllowed({ "Admin" })
     public Response delete(@PathParam("id") Long id) {
-        brinquedoService.delete(id);
+        itemCompraService.delete(id);
         return Response
                 .status(Status.NO_CONTENT)
                 .build();
+
     }
 
     @GET
     @Path("/search/{id}")
     @RolesAllowed({ "Admin" })
-    public BrinquedoResponseDTO searchId(@PathParam("id") Long id) {
-        return brinquedoService.findById(id);
+    public ItemCompraResponseDTO searchId(@PathParam("id") Long id) {
+        return itemCompraService.findById(id);
     }
 
     @GET
     @Path("/search/{nome}")
     @RolesAllowed({ "Admin" })
-    public List<BrinquedoResponseDTO> search(@PathParam("nome") String nome) {
-        return brinquedoService.findByNome(nome);
+    public List<ItemCompraResponseDTO> search(@PathParam("nome") String nome) {
+        return itemCompraService.findByNome(nome);
     }
 
     @GET
     @Path("/count")
     @RolesAllowed({ "Admin" })
     public long count() {
-        return brinquedoService.count();
+        return itemCompraService.count();
     }
-
 }

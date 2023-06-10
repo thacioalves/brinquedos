@@ -1,8 +1,16 @@
 package br.unitins.resource;
 
+import java.util.List;
+
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
 
+import br.unitins.application.Result;
+import br.unitins.dto.pessoa.PessoaDTO;
+import br.unitins.dto.pessoa.PessoaResponseDTO;
+import br.unitins.dto.usuario.UsuarioResponseDTO;
+import br.unitins.service.pessoa.PessoaService;
+import br.unitins.service.usuario.UsuarioService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
@@ -18,22 +26,13 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-import br.unitins.application.Result;
-import br.unitins.dto.brinquedo.BrinquedoDTO;
-import br.unitins.dto.brinquedo.BrinquedoResponseDTO;
-import br.unitins.dto.usuario.UsuarioResponseDTO;
-import br.unitins.service.brinquedo.BrinquedoService;
-import br.unitins.service.usuario.UsuarioService;
-
-import java.util.List;
-
-@Path("/brinquedos")
+@Path("/pessoas")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class BrinquedoResource {
-
+public class PessoaResource {
+    
     @Inject
-    BrinquedoService brinquedoService;
+    PessoaService pessoaService;
 
     @Inject
     JsonWebToken jwt;
@@ -41,7 +40,7 @@ public class BrinquedoResource {
     @Inject
     UsuarioService usuarioService;
 
-    private static final Logger LOG = Logger.getLogger(BrinquedoResource.class);
+    private static final Logger LOG = Logger.getLogger(PessoaResource.class);
 
     @GET
     @RolesAllowed({ "Admin", "User" })
@@ -56,31 +55,30 @@ public class BrinquedoResource {
 
     @GET
     @RolesAllowed({ "Admin" })
-    public List<BrinquedoResponseDTO> getAll() {
-        LOG.info("Buscando todos os brinquedos.");
+    public List<PessoaResponseDTO> getAll() {
+        LOG.info("Buscando todas as pessoas.");
         LOG.debug("ERRO DE DEBUG.");
-        return brinquedoService.getAll();
-
+        return pessoaService.getAll();
     }
 
     @GET
-    @RolesAllowed({ "Admin" })
     @Path("/{id}")
-    public BrinquedoResponseDTO findById(@PathParam("id") Long id) {
-        return brinquedoService.findById(id);
+    @RolesAllowed({ "Admin" })
+    public PessoaResponseDTO findById(@PathParam("id") Long id) {
+        return pessoaService.findById(id);
     }
 
     @POST
     @RolesAllowed({ "Admin" })
-    public Response insert(BrinquedoDTO brinquedodto) {
-        LOG.infof("Inserindo um brinquedo: %s", brinquedodto.getClass());
+    public Response insert(PessoaDTO pessoaDTO) {
+        LOG.infof("Inserindo uma cidade: %s", pessoaDTO.nome());
         Result result = null;
         try {
-            BrinquedoResponseDTO brinquedo = brinquedoService.create(brinquedodto);
-            LOG.infof("Brinquedo (%d) criado com sucesso.", brinquedo.id());
-            return Response.status(Status.CREATED).entity(brinquedo).build();
+            PessoaResponseDTO pessoa = pessoaService.create(pessoaDTO);
+            LOG.infof("Pessoa (%d) criada com sucesso.", pessoa.id());
+            return Response.status(Status.CREATED).entity(pessoa).build();
         } catch (ConstraintViolationException e) {
-            LOG.error("Erro ao incluir um brinquedo.");
+            LOG.error("Erro ao incluir uma cidade.");
             LOG.debug(e.getMessage());
             result = new Result(e.getConstraintViolations());
         } catch (Exception e) {
@@ -93,15 +91,15 @@ public class BrinquedoResource {
     @PUT
     @Path("/{id}")
     @RolesAllowed({ "Admin" })
-    public Response update(@PathParam("id") Long id, BrinquedoDTO brinquedodto) {
-        LOG.infof("Atualizando um brinquedo: %s", brinquedodto.getClass());
+    public Response update(@PathParam("id") Long id, PessoaDTO pessoaDTO) {
+        LOG.infof("Atualizando uma pessoa: %s", pessoaDTO.nome());
         Result result = null;
         try {
-            BrinquedoResponseDTO brinquedo = brinquedoService.update(id, brinquedodto);
-            LOG.infof("Brinquedo (%d) atualizado com sucesso.", brinquedo.id());
-            return Response.status(Status.NO_CONTENT).entity(brinquedo).build();
+            PessoaResponseDTO pessoa = pessoaService.update(id, pessoaDTO);
+            LOG.infof("Pessoa (%d) atualizada com sucesso.", pessoa.id());
+            return Response.status(Status.NO_CONTENT).entity(pessoa).build();
         } catch (ConstraintViolationException e) {
-            LOG.error("Erro ao atualizar um brinquedo.");
+            LOG.error("Erro ao atualizar uma pessoa.");
             LOG.debug(e.getMessage());
             result = new Result(e.getConstraintViolations());
         } catch (Exception e) {
@@ -109,38 +107,28 @@ public class BrinquedoResource {
             result = new Result(e.getMessage(), false);
         }
         return Response.status(Status.NOT_FOUND).entity(result).build();
-
     }
 
     @DELETE
     @Path("/{id}")
     @RolesAllowed({ "Admin" })
     public Response delete(@PathParam("id") Long id) {
-        brinquedoService.delete(id);
-        return Response
-                .status(Status.NO_CONTENT)
-                .build();
-    }
-
-    @GET
-    @Path("/search/{id}")
-    @RolesAllowed({ "Admin" })
-    public BrinquedoResponseDTO searchId(@PathParam("id") Long id) {
-        return brinquedoService.findById(id);
-    }
-
-    @GET
-    @Path("/search/{nome}")
-    @RolesAllowed({ "Admin" })
-    public List<BrinquedoResponseDTO> search(@PathParam("nome") String nome) {
-        return brinquedoService.findByNome(nome);
+        pessoaService.delete(id);
+        return Response.status(Status.NO_CONTENT).build();
     }
 
     @GET
     @Path("/count")
     @RolesAllowed({ "Admin" })
     public long count() {
-        return brinquedoService.count();
+        return pessoaService.count();
     }
 
+    @GET
+    @Path("/search/{nome}")
+    @RolesAllowed({ "Admin" })
+    public List<PessoaResponseDTO> search(@PathParam("nome") String nome) {
+        return pessoaService.findByNome(nome);
+
+    }
 }
